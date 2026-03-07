@@ -22,16 +22,18 @@
    Responsive — Mobile
    ============================================================ */
 @media (max-width: 640px) {
-  /* Contoh: perkecil hero title di HP */
-  /* .hero-bg h1 { font-size: 2rem; } */
+   .navbar-brand span {
+    font-size: 14px;
+  }
 }
 
 /* ============================================================
    Responsive — Tablet
    ============================================================ */
 @media (min-width: 641px) and (max-width: 1024px) {
-  /* Contoh: atur grid kategori di tablet */
-  /* .kategori-grid { grid-template-columns: repeat(2, 1fr); } */
+  .navbar-brand span {
+    font-size: 12px;
+  }
 }
 
 .card-hover h3 {
