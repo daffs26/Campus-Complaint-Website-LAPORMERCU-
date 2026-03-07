@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>#LAPORMERCU - Sistem Pengaduan Fasilitas Kampus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="index.css"/>
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </div>
+        <span class="font-bold text-lg text-blue-700" style="font-family:'Plus Jakarta Sans',sans-serif;">#LAPORMERCU</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+        <a href="#cara-kerja" class="hover:text-blue-600 transition-colors">Cara Kerja</a>
+        <a href="#kategori" class="hover:text-blue-600 transition-colors">Kategori</a>
+        <a href="#stats" class="hover:text-blue-600 transition-colors">Statistik</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="login-user.html" class="text-sm font-semibold text-blue-600 border border-blue-200 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors">Masuk</a>
+        <a href="login-admin.html" class="text-sm font-semibold text-white btn-primary px-4 py-2 rounded-lg">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-bg pt-32 pb-24 px-6 relative overflow-hidden">
+    <div class="absolute top-20 right-10 w-64 h-64 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+    <div class="absolute bottom-10 left-10 w-48 h-48 bg-blue-200 rounded-full blur-3xl opacity-30"></div>
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 fade-up">
+            <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+            Sistem Pengaduan Resmi Kampus
+          </div>
+          <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-5 fade-up-2">
+            Laporkan Masalah<br/>
+            <span class="text-blue-600">Fasilitas Kampus</span><br/>
+            dengan Mudah
+          </h1>
+          <p class="text-gray-500 text-lg leading-relaxed mb-8 fade-up-3">
+            Bantu kami menjaga kenyamanan kampus. Sampaikan pengaduanmu dan pantau status penanganannya secara langsung.
+          </p>
+          <div class="flex flex-wrap gap-3 fade-up-4 justify-center">
+            <a href="login-user.html" class="btn-primary text-white font-semibold px-6 py-3 rounded-xl flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              Buat Laporan
+            </a>
+            <a href="#cara-kerja" class="bg-white text-gray-700 font-semibold px-6 py-3 rounded-xl border border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-all flex items-center gap-2">
+              Pelajari Selengkapnya
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        <!-- Ilustrasi -->
+        <div class="hidden md:flex justify-center fade-up-3">
+          <div class="relative w-80 h-80">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-100 to-blue-50 rounded-3xl rotate-3"></div>
+            <div class="absolute inset-0 bg-white rounded-3xl shadow-xl p-6 flex flex-col gap-4">
+              <div class="flex items-center gap-3 pb-3 border-b border-gray-100">
+                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <span class="font-semibold text-gray-800 text-sm">Laporan Terbaru</span>
+              </div>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                  <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-700">AC Rusak - Lab Komputer</p>
+                    <p class="text-xs text-gray-400">Laboratorium</p>
+                  </div>
+                  <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-medium">Diproses</span>
+                </div>
+                <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                  <div class="w-2 h-2 bg-red-400 rounded-full"></div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-700">Toilet Mampet Lt.2</p>
+                    <p class="text-xs text-gray-400">Toilet</p>
+                  </div>
+                  <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">Baru</span>
+                </div>
+                <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                  <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                  <div class="flex-1">
+                    <p class="text-xs font-medium text-gray-700">Lampu Parkir Mati</p>
+                    <p class="text-xs text-gray-400">Parkiran</p>
+                  </div>
+                  <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Selesai</span>
+                </div>
+              </div>
+              <div class="mt-auto pt-2 border-t border-gray-100">
+                <div class="flex justify-between text-xs text-gray-400">
+                  <span>3 laporan aktif</span>
+                  <span class="text-blue-500 font-medium">Lihat semua →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats" class="bg-blue-600 py-12 px-6">
+    <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div class="text-white">
+        <div class="text-3xl font-extrabold">248</div>
+        <div class="text-blue-200 text-sm mt-1">Total Laporan</div>
+      </div>
+      <div class="text-white">
+        <div class="text-3xl font-extrabold">189</div>
+        <div class="text-blue-200 text-sm mt-1">Laporan Selesai</div>
+      </div>
+      <div class="text-white">
+        <div class="text-3xl font-extrabold">42</div>
+        <div class="text-blue-200 text-sm mt-1">Sedang Diproses</div>
+      </div>
+      <div class="text-white">
+        <div class="text-3xl font-extrabold">3 Hari</div>
+        <div class="text-blue-200 text-sm mt-1">Rata-rata Penyelesaian</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARA KERJA -->
+  <section id="cara-kerja" class="py-20 px-6 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl font-extrabold text-gray-900 mb-3">Cara Kerja #LAPORMERCU</h2>
+        <p class="text-gray-500">Proses yang simpel dan transparan dari laporan hingga penyelesaian</p>
+      </div>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm text-center">
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </div>
+          <div class="text-xs font-bold text-blue-500 mb-1">LANGKAH 1</div>
+          <h3 class="font-bold text-gray-800 mb-2">Login dengan NIM</h3>
+          <p class="text-sm text-gray-500">Masuk menggunakan NIM dan password kamu</p>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm text-center">
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          </div>
+          <div class="text-xs font-bold text-blue-500 mb-1">LANGKAH 2</div>
+          <h3 class="font-bold text-gray-800 mb-2">Buat Laporan</h3>
+          <p class="text-sm text-gray-500">Isi form lengkap dengan foto dan deskripsi masalah</p>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm text-center">
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          </div>
+          <div class="text-xs font-bold text-blue-500 mb-1">LANGKAH 3</div>
+          <h3 class="font-bold text-gray-800 mb-2">Admin Meninjau</h3>
+          <p class="text-sm text-gray-500">Tim admin memverifikasi dan menindaklanjuti laporan</p>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm text-center">
+          <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="text-xs font-bold text-green-500 mb-1">LANGKAH 4</div>
+          <h3 class="font-bold text-gray-800 mb-2">Masalah Selesai</h3>
+          <p class="text-sm text-gray-500">Kamu akan melihat status laporan berubah jadi Selesai</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KATEGORI -->
+  <section id="kategori" class="py-20 px-6 bg-gray-50">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-14">
+        <h2 class="text-3xl font-extrabold text-gray-900 mb-3">Kategori Fasilitas</h2>
+        <p class="text-gray-500">Laporkan masalah di berbagai area kampus</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-4">
+          <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">🏫</div>
+          <div><h3 class="font-semibold text-gray-800">Gedung / Ruang Kelas</h3><p class="text-xs text-gray-400 mt-0.5">AC, kursi, proyektor, dll</p></div>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-4">
+          <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">🚻</div>
+          <div><h3 class="font-semibold text-gray-800">Toilet</h3><p class="text-xs text-gray-400 mt-0.5">Kebersihan, kerusakan sarana</p></div>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-4">
+          <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">🅿️</div>
+          <div><h3 class="font-semibold text-gray-800">Parkiran</h3><p class="text-xs text-gray-400 mt-0.5">Penerangan, keamanan, akses</p></div>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-4">
+          <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">🍽️</div>
+          <div><h3 class="font-semibold text-gray-800">Kantin</h3><p class="text-xs text-gray-400 mt-0.5">Kebersihan, fasilitas makan</p></div>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-4">
+          <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">🔬</div>
+          <div><h3 class="font-semibold text-gray-800">Laboratorium</h3><p class="text-xs text-gray-400 mt-0.5">Alat, komputer, keselamatan</p></div>
+        </div>
+        <div class="card-hover bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-4">
+          <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">📚</div>
+          <div><h3 class="font-semibold text-gray-800">Perpustakaan</h3><p class="text-xs text-gray-400 mt-0.5">Buku, ruang baca, wifi</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 px-6 bg-white">
+    <div class="max-w-2xl mx-auto text-center">
+      <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Siap Membuat Laporan?</h2>
+      <p class="text-gray-500 mb-8">Login sekarang dan bantu kami menjaga kualitas fasilitas kampus</p>
+      <a href="login-user.html" class="btn-primary text-white font-semibold px-8 py-3.5 rounded-xl inline-flex items-center gap-2">
+        Mulai Sekarang
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 py-8 px-6 text-center text-sm">
+    <p class="font-semibold text-white mb-1" style="font-family:'Plus Jakarta Sans',sans-serif;">#LAPORMERCU</p>
+    <p>Daffa Belajar Web Sistem Informasi Pengaduan Fasilitas Kampus &copy; 2026</p>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

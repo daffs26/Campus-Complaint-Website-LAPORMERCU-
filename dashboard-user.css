@@ -1,0 +1,21 @@
+/* ============================================================
+   dashboard-user.css — CSS khusus Dashboard Mahasiswa
+   ============================================================ */
+
+/* ============================================================
+   Responsive — Mobile
+   ============================================================ */
+@media (max-width: 640px) {
+  /* Contoh: stat card 2 kolom di HP */
+  /* .stat-grid { grid-template-columns: repeat(2, 1fr); } */
+
+  /* Contoh: tabs full width di HP */
+  /* .tab-wrap { width: 100%; } */
+}
+
+/* ============================================================
+   Responsive — Tablet
+   ============================================================ */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Tambahkan CSS tablet khusus dashboard user di sini */
+}
