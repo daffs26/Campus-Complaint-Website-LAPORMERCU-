@@ -3,7 +3,9 @@
    ============================================================ */
 
 .hero-bg {
-  background: linear-gradient(135deg, #f0f6ff 0%, #ffffff 50%, #e8f0fe 100%);
+  background: 
+    url('https://cdn1-production-images-kly.akamaized.net/EsomuO6YDyyRoC6Kclj589MNvBE=/1280x720/smart/filters:quality(75):strip_icc()/kly-media-production/medias/3644454/original/048143100_1637850952-WhatsApp_Image_2021-11-25_at_21.14.23.jpeg') center/cover no-repeat;
+    ;
 }
 
 .stat-card {
