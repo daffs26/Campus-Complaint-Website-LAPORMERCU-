@@ -2,20 +2,28 @@
    dashboard-user.css — CSS khusus Dashboard Mahasiswa
    ============================================================ */
 
+/* Laporan list item mobile-friendly */
+.laporan-item {
+  transition: background 0.15s;
+}
+.laporan-item:hover {
+  background: #f9fafb;
+}
+
 /* ============================================================
    Responsive — Mobile
    ============================================================ */
 @media (max-width: 640px) {
-  /* Contoh: stat card 2 kolom di HP */
-  /* .stat-grid { grid-template-columns: repeat(2, 1fr); } */
-
-  /* Contoh: tabs full width di HP */
-  /* .tab-wrap { width: 100%; } */
+  /* Laporan list items: stack meta info */
+  .laporan-meta {
+    flex-direction: column;
+    gap: 4px !important;
+  }
 }
 
 /* ============================================================
    Responsive — Tablet
    ============================================================ */
 @media (min-width: 641px) and (max-width: 1024px) {
-  /* Tambahkan CSS tablet khusus dashboard user di sini */
+  /* Tablet-specific if needed */
 }

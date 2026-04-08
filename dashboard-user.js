@@ -28,12 +28,17 @@ window.onload = function () {
 function showTab(tab) {
   document.getElementById('panel-laporan').classList.toggle('hidden', tab !== 'laporan');
   document.getElementById('panel-buat').classList.toggle('hidden', tab !== 'buat');
-  document.getElementById('tab-laporan').className = tab === 'laporan'
-    ? 'tab-active px-5 py-2 rounded-lg text-sm font-semibold transition-all'
-    : 'px-5 py-2 rounded-lg text-sm font-semibold text-gray-500 transition-all';
-  document.getElementById('tab-buat').className = tab === 'buat'
-    ? 'tab-active px-5 py-2 rounded-lg text-sm font-semibold transition-all'
-    : 'px-5 py-2 rounded-lg text-sm font-semibold text-gray-500 transition-all';
+
+  const tabLaporan = document.getElementById('tab-laporan');
+  const tabBuat = document.getElementById('tab-buat');
+
+  if (tab === 'laporan') {
+    tabLaporan.className = 'tab-active px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all';
+    tabBuat.className = 'px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all';
+  } else {
+    tabBuat.className = 'tab-active px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all';
+    tabLaporan.className = 'px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all';
+  }
 }
 
 function renderLaporan() {
@@ -57,20 +62,27 @@ function renderLaporan() {
   list.innerHTML = myLaporan.map(l => {
     const statusClass = l.status === 'Baru' ? 'status-baru' : l.status === 'Diproses' ? 'status-diproses' : 'status-selesai';
     return `
-      <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
-        <div class="flex items-start justify-between gap-4">
-          <div class="flex-1">
-            <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-semibold text-gray-800 text-sm">${l.judul}</h3>
-              <span class="text-xs px-2 py-0.5 rounded-full font-medium ${statusClass}">${l.status}</span>
-            </div>
-            <div class="flex items-center gap-3 text-xs text-gray-400">
-              <span>📌 ${l.kategori}</span>
-              <span>📍 ${l.lokasi}</span>
-              <span>${l.tanggal}</span>
-            </div>
-            <p class="text-xs text-gray-500 mt-1">${l.deskripsi}</p>
+      <div class="laporan-item px-4 sm:px-6 py-4 sm:py-5 hover:bg-gray-50 transition-colors">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <h3 class="font-semibold text-gray-800 text-sm sm:text-base leading-snug">${l.judul}</h3>
+          <span class="text-xs px-2.5 py-0.5 rounded-full font-medium ${statusClass} flex-shrink-0">${l.status}</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-3 mb-3">
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="text-gray-400 w-4 text-center flex-shrink-0">📌</span>
+            <span><span class="text-gray-400 font-medium">Kategori:</span> ${l.kategori}</span>
           </div>
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="text-gray-400 w-4 text-center flex-shrink-0">📍</span>
+            <span><span class="text-gray-400 font-medium">Lokasi:</span> ${l.lokasi}</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="text-gray-400 w-4 text-center flex-shrink-0">📅</span>
+            <span><span class="text-gray-400 font-medium">Tanggal:</span> ${l.tanggal}</span>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-lg px-3 py-2">
+          <p class="text-xs text-gray-500 leading-relaxed">${l.deskripsi}</p>
         </div>
       </div>`;
   }).join('');

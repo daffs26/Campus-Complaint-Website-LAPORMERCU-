@@ -3,9 +3,9 @@
    ============================================================ */
 
 .hero-bg {
-  background: 
+  background:
+    linear-gradient(135deg, rgba(30, 58, 138, 0.85), rgba(37, 99, 235, 0.75)),
     url('https://cdn1-production-images-kly.akamaized.net/EsomuO6YDyyRoC6Kclj589MNvBE=/1280x720/smart/filters:quality(75):strip_icc()/kly-media-production/medias/3644454/original/048143100_1637850952-WhatsApp_Image_2021-11-25_at_21.14.23.jpeg') center/cover no-repeat;
-    ;
 }
 
 .stat-card {
@@ -20,12 +20,111 @@
   line-height: 0;
 }
 
+/* Card text overflow protection */
+.card-hover h3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Limit text width inside card */
+.card-hover > div:last-child {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Stats Marquee
+   ============================================================ */
+@keyframes statsScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.stats-marquee {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+}
+
+.stats-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding-right: 40px;
+  flex-shrink: 0;
+  animation: statsScroll 15s linear infinite;
+}
+
+.stats-marquee:hover .stats-marquee-track {
+  animation-play-state: paused;
+}
+
+.stats-marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stats-number {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+}
+
+.stats-label {
+  font-size: 13px;
+  color: rgba(191, 219, 254, 1);
+  font-weight: 500;
+}
+
+.stats-marquee-divider {
+  color: rgba(147, 197, 253, 0.5);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
 /* ============================================================
    Responsive — Mobile
    ============================================================ */
 @media (max-width: 640px) {
-   .navbar-brand span {
-    font-size: 14px;
+  .hero-bg {
+    padding-top: 100px !important;
+    padding-bottom: 48px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .hero-bg h1 {
+    font-size: 28px !important;
+    line-height: 1.3 !important;
+  }
+
+  .hero-bg p {
+    font-size: 15px !important;
+  }
+
+  /* Cara kerja cards: 1 column on small screens */
+  #cara-kerja .grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Kategori cards: 1 column on small screens */
+  #kategori .grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* CTA section */
+  #kategori + section h2 {
+    font-size: 22px !important;
   }
 }
 
@@ -33,20 +132,15 @@
    Responsive — Tablet
    ============================================================ */
 @media (min-width: 641px) and (max-width: 1024px) {
-  .navbar-brand span {
-    font-size: 12px;
+  .hero-bg h1 {
+    font-size: 36px !important;
   }
-}
 
-.card-hover h3 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
+  #cara-kerja .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 
-/* Batasi lebar div teks di dalam card agar tidak melar */
-.card-hover > div:last-child {
-  min-width: 0;
-  overflow: hidden;
+  #kategori .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }

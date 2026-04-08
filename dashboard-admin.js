@@ -35,36 +35,56 @@ function statusBadge(status) {
     'Diproses': 'background:#fef3c7;color:#d97706;',
     'Selesai':  'background:#dcfce7;color:#16a34a;'
   };
-  return `<span style="${map[status] || ''}font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;">${status}</span>`;
+  return `<span style="${map[status] || ''}font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;white-space:nowrap;">${status}</span>`;
 }
 
 function renderTable(data) {
   const tbody = document.getElementById('laporanTable');
+  const cards = document.getElementById('laporanCards');
   const empty = document.getElementById('emptyTable');
 
   if (data.length === 0) {
     tbody.innerHTML = '';
+    cards.innerHTML = '';
     empty.style.display = 'block';
     return;
   }
   empty.style.display = 'none';
 
+  // Desktop table
   tbody.innerHTML = data.map(l => `
-    <tr onclick="bukaDetail(${l.id})">
-      <td style="color:#9ca3af;font-family:monospace;font-size:12px;">#${String(l.id).padStart(3,'0')}</td>
-      <td>
-        <div style="font-weight:600;color:#111827;">${l.nama}</div>
+    <tr onclick="bukaDetail(${l.id})" class="cursor-pointer">
+      <td class="px-4 sm:px-6 py-3" style="color:#9ca3af;font-family:monospace;font-size:12px;">#${String(l.id).padStart(3,'0')}</td>
+      <td class="px-4 sm:px-6 py-3">
+        <div style="font-weight:600;color:#111827;font-size:13px;">${l.nama}</div>
         <div style="font-size:11px;color:#9ca3af;">${l.nim} · ${l.prodi}</div>
       </td>
-      <td>
-        <div style="font-weight:600;color:#111827;">${l.judul}</div>
+      <td class="px-4 sm:px-6 py-3">
+        <div style="font-weight:600;color:#111827;font-size:13px;">${l.judul}</div>
         <div style="font-size:11px;color:#9ca3af;">📍 ${l.lokasi}</div>
       </td>
-      <td style="color:#4b5563;">${l.kategori}</td>
-      <td style="color:#9ca3af;font-size:12px;">${l.tanggal}</td>
-      <td>${statusBadge(l.status)}</td>
-      <td><span style="color:#2563eb;font-size:12px;font-weight:600;">Detail →</span></td>
+      <td class="px-4 sm:px-6 py-3 hidden md:table-cell" style="color:#4b5563;font-size:13px;">${l.kategori}</td>
+      <td class="px-4 sm:px-6 py-3 hidden lg:table-cell" style="color:#9ca3af;font-size:12px;">${l.tanggal}</td>
+      <td class="px-4 sm:px-6 py-3">${statusBadge(l.status)}</td>
+      <td class="px-4 sm:px-6 py-3"><span style="color:#2563eb;font-size:12px;font-weight:600;">Detail →</span></td>
     </tr>`).join('');
+
+  // Mobile cards
+  cards.innerHTML = data.map(l => `
+    <div class="laporan-card" onclick="bukaDetail(${l.id})">
+      <div class="laporan-card-header">
+        <div>
+          <div class="laporan-card-title">${l.judul}</div>
+          <div style="font-size:12px;color:#6b7280;margin-top:2px;">${l.nama}</div>
+        </div>
+        ${statusBadge(l.status)}
+      </div>
+      <div class="laporan-card-meta">
+        <span>📍 ${l.lokasi}</span>
+        <span>📌 ${l.kategori}</span>
+        <span>${l.tanggal}</span>
+      </div>
+    </div>`).join('');
 }
 
 function filterLaporan() {
@@ -86,7 +106,7 @@ function bukaDetail(id) {
   selectedId = id;
 
   document.getElementById('modalContent').innerHTML = `
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <h4 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;color:#111827;margin:0;">${l.judul}</h4>
       ${statusBadge(l.status)}
     </div>

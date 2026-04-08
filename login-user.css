@@ -2,14 +2,16 @@
    login-user.css — CSS khusus Login Mahasiswa
    ============================================================ */
 
-.bg-pattern-light {
+.bg-pattern {
   background: linear-gradient(135deg, #eff6ff 0%, #ffffff 60%, #dbeafe 100%);
+  min-height: 100vh;
 }
 
 /* ============================================================
    Responsive — Mobile
    ============================================================ */
 @media (max-width: 640px) {
-  /* Contoh: card login full width di HP */
-  /* .login-card { padding: 24px 16px; } */
+  .bg-pattern {
+    padding: 24px 12px !important;
+  }
 }
