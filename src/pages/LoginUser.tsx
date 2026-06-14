@@ -129,9 +129,9 @@ export default function LoginUser() {
         <div className="text-center mt-4 sm:mt-5">
           <p className="text-sm text-gray-500">
             Kamu admin?
-            <Link to="/login-admin" className="text-blue-600 font-semibold hover:underline ml-1">Login sebagai Admin →</Link>
+            <Link to="/login-admin" className="text-blue-600 font-semibold hover:underline ml-1">Login sebagai Admin </Link>
           </p>
-          <Link to="/" className="text-xs text-gray-400 hover:text-gray-600 mt-2 inline-block">← Kembali ke Beranda</Link>
+          <Link to="/" className="text-xs text-gray-400 hover:text-gray-600 mt-2 inline-block"> Kembali ke Beranda</Link>
         </div>
       </div>
     </div>
