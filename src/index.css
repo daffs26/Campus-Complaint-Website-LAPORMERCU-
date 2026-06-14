@@ -1,0 +1,471 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+/* ============================================================
+   Custom Fonts & Typography
+   ============================================================ */
+
+* {
+  font-family: 'DM Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, label, .font-jakarta {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ============================================================
+   Custom Components (From original style.css)
+   ============================================================ */
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* --- Status Badges --- */
+.status-baru {
+  background: #fee2e2;
+  color: #dc2626;
+}
+.status-diproses {
+  background: #fef3c7;
+  color: #d97706;
+}
+.status-selesai {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* --- Card Hover Transition --- */
+.card-hover {
+  transition: all 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.12);
+}
+
+@media (max-width: 640px) {
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
+  }
+}
+
+/* --- Inputs --- */
+.input-field {
+  transition: all 0.2s ease;
+}
+.input-field:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* --- Modal Overlay --- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.active {
+  display: flex;
+}
+
+@media (max-width: 640px) {
+  .modal-overlay > div {
+    max-width: 100%;
+    margin: 0 8px;
+    max-height: 85vh;
+  }
+}
+
+/* --- Table Hover --- */
+tr:hover td {
+  background: #f8faff;
+}
+
+/* --- Mobile Menu Dropdown --- */
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 16px 24px;
+  z-index: 50;
+}
+.mobile-menu.active {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================================
+   Landing Page specific (From original index.css)
+   ============================================================ */
+
+.hero-bg {
+  background:
+    url('https://cdn1-production-images-kly.akamaized.net/EsomuO6YDyyRoC6Kclj589MNvBE=/1280x720/smart/filters:quality(75):strip_icc()/kly-media-production/medias/3644454/original/048143100_1637850952-WhatsApp_Image_2021-11-25_at_21.14.23.jpeg') center/cover no-repeat;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.card-hover h3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ============================================================
+   Stats Marquee Animation
+   ============================================================ */
+@keyframes statsScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.stats-marquee {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+}
+
+.stats-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding-right: 40px;
+  flex-shrink: 0;
+  animation: statsScroll 15s linear infinite;
+}
+
+.stats-marquee:hover .stats-marquee-track {
+  animation-play-state: paused;
+}
+
+.stats-marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stats-number {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: white;
+}
+
+.stats-label {
+  font-size: 13px;
+  color: rgba(191, 219, 254, 1);
+  font-weight: 500;
+}
+
+.stats-marquee-divider {
+  color: rgba(147, 197, 253, 0.5);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Keyframe Animations
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up   { animation: fadeUp 0.6s ease forwards; }
+.fade-up-2 { animation: fadeUp 0.7s 0.15s ease forwards; opacity: 0; }
+.fade-up-3 { animation: fadeUp 0.7s 0.30s ease forwards; opacity: 0; }
+.fade-up-4 { animation: fadeUp 0.7s 0.45s ease forwards; opacity: 0; }
+
+/* ============================================================
+   Login Admin page specific (From original login-admin.css)
+   ============================================================ */
+.admin-bg {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-container {
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  z-index: 10;
+}
+
+.deco {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  filter: blur(40px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.input-admin {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 12px 12px 12px 40px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+.input-admin::placeholder { color: rgba(147, 197, 253, 0.8); }
+.input-admin:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+}
+
+.admin-input-wrap {
+  position: relative;
+}
+
+.admin-field {
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.admin-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-admin {
+  width: 100%;
+  background: white;
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.btn-admin:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+.btn-admin:active {
+  transform: translateY(0);
+}
+
+.error-box {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(252, 165, 165, 0.3);
+  color: #fecaca;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 13px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.error-box.active {
+  display: flex;
+}
+
+.demo-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 20px;
+}
+
+.demo-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(147, 197, 253, 1);
+  margin: 0 0 4px;
+}
+
+.demo-text {
+  font-size: 12px;
+  color: rgba(219, 234, 254, 1);
+  margin: 0;
+}
+
+.demo-mono {
+  font-family: monospace;
+  font-weight: 700;
+}
+
+.label-admin {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(191, 219, 254, 1);
+  margin-bottom: 6px;
+}
+
+.admin-logo-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.admin-logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+
+.admin-logo-icon {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-logo-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: white;
+}
+
+.admin-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 6px;
+}
+
+.admin-subtitle {
+  color: rgba(147, 197, 253, 1);
+  font-size: 14px;
+  margin: 0;
+}
+
+.admin-footer-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.admin-footer-text {
+  font-size: 14px;
+  color: rgba(147, 197, 253, 1);
+  margin: 0 0 8px;
+}
+
+.admin-footer-link {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+.admin-footer-link:hover {
+  text-decoration: underline;
+}
+
+.admin-footer-back {
+  font-size: 12px;
+  color: rgba(147, 197, 253, 0.8);
+  text-decoration: none;
+  display: inline-block;
+}
+.admin-footer-back:hover {
+  color: rgba(147, 197, 253, 1);
+}
+
+@media (max-width: 640px) {
+  .admin-bg {
+    padding: 24px 12px;
+  }
+
+  .glass-card {
+    padding: 24px 16px;
+  }
+
+  .admin-title {
+    font-size: 20px;
+  }
+
+  .admin-logo-text {
+    font-size: 18px;
+  }
+
+  .admin-logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .admin-logo-section {
+    margin-bottom: 24px;
+  }
+}
+
