@@ -34,7 +34,6 @@ export default function LoginUser() {
     }
   };
 
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   const handleQuickLogin = () => {
     const demoUser = USERS[0];
@@ -132,27 +131,18 @@ export default function LoginUser() {
             </button>
           </form>
 
-          {/* Info demo & Quick Login (Local Only) */}
-          <div className="mt-5 bg-blue-50 border border-blue-100 rounded-xl p-3.5 sm:p-4 flex flex-col gap-2.5">
-            <div>
-              <p className="text-xs text-blue-700 font-semibold mb-1 flex items-center gap-1">
-                <span>💡 Demo Login</span>
-              </p>
-              <p className="text-xs text-blue-600">NIM: <span className="font-mono font-bold">2024001</span> &nbsp;|&nbsp; Password: <span className="font-mono font-bold">mahasiswa123</span></p>
-              <p className="text-[10px] text-blue-500 mt-1">Akun lain: NIM <span className="font-bold">2024003</span> (Informatika), <span className="font-bold">2024004</span> (Mesin), <span className="font-bold">2024005</span> (Manajemen), <span className="font-bold">2024006</span> (DKV)</p>
-            </div>
-            {isLocal && (
-              <button
-                type="button"
-                onClick={handleQuickLogin}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-                Masuk Instan (Demo Mahasiswa)
-              </button>
-            )}
+          {/* Quick Login */}
+          <div className="mt-5">
+            <button
+              type="button"
+              onClick={handleQuickLogin}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              Masuk Instan
+            </button>
           </div>
         </div>
 

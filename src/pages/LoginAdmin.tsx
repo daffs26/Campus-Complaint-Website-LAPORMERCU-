@@ -29,7 +29,6 @@ export default function LoginAdmin() {
     }
   };
 
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
   const handleQuickLogin = () => {
     const demoAdmin = ADMINS[0];
@@ -130,28 +129,18 @@ export default function LoginAdmin() {
             </button>
           </form>
 
-          {/* Demo info & Quick Login (Local Only) */}
-          <div className="demo-box flex flex-col gap-2.5">
-            <div>
-              <p className="demo-label">💡 Demo Login</p>
-              <p className="demo-text">
-                Username: <span className="demo-mono font-bold">admin</span>
-                &nbsp;|&nbsp;
-                Password: <span className="demo-mono font-bold">admin123</span>
-              </p>
-            </div>
-            {isLocal && (
-              <button
-                type="button"
-                onClick={handleQuickLogin}
-                className="w-full bg-white hover:bg-blue-50 text-blue-900 font-bold py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-                Masuk Instan (Demo Admin)
-              </button>
-            )}
+          {/* Quick Login */}
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={handleQuickLogin}
+              className="w-full bg-white hover:bg-blue-50 text-blue-900 font-bold py-3 px-4 rounded-xl text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              Masuk Instan
+            </button>
           </div>
         </div>
 

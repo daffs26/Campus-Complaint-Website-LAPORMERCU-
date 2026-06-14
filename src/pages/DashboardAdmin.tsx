@@ -6,7 +6,7 @@ import { useToast } from '../components/Toast';
 import Modal from '../components/Modal';
 import { TableRowSkeleton, CardSkeleton } from '../components/Skeleton';
 import { PieChart, LineChart } from '../components/Charts';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Search, Check, RotateCcw } from 'lucide-react';
 
 export default function DashboardAdmin() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -17,6 +17,7 @@ export default function DashboardAdmin() {
   const [filterStatus, setFilterStatus] = useState('');
   const [filterKategori, setFilterKategori] = useState('');
   const [filterProdi, setFilterProdi] = useState('');
+  const [activeDropdown, setActiveDropdown] = useState<'status' | 'kategori' | 'prodi' | null>(null);
 
   // Selected Detail & Modals
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -164,12 +165,23 @@ export default function DashboardAdmin() {
 
   const renderStatusBadge = (status: 'Baru' | 'Diproses' | 'Selesai') => {
     const map = {
-      'Baru': 'bg-red-100 text-red-700',
-      'Diproses': 'bg-yellow-100 text-yellow-700',
-      'Selesai': 'bg-green-100 text-green-700'
+      'Baru': {
+        bg: 'bg-red-50/70 text-red-700 border-red-100/80',
+        dot: 'bg-red-500'
+      },
+      'Diproses': {
+        bg: 'bg-amber-50/70 text-amber-700 border-amber-100/80',
+        dot: 'bg-amber-500'
+      },
+      'Selesai': {
+        bg: 'bg-green-50/70 text-green-700 border-green-100/80',
+        dot: 'bg-green-500'
+      }
     };
+    const style = map[status] || { bg: 'bg-gray-50 text-gray-700 border-gray-100', dot: 'bg-gray-500' };
     return (
-      <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${map[status] || ''}`}>
+      <span className={`inline-flex items-center gap-1.5 text-[10px] font-extrabold px-2.5 py-1 rounded-full border whitespace-nowrap ${style.bg}`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
         {status}
       </span>
     );
@@ -217,53 +229,60 @@ export default function DashboardAdmin() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8 fade-up">
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Total</span>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100/80 shadow-sm p-4 sm:p-5 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-blue-500 rounded-t-xl sm:rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total</span>
+              <div className="w-9 h-9 bg-blue-50/70 text-blue-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-gray-900">{countTotal}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Total Laporan</div>
+            <div className="text-2xl sm:text-3.5xl font-extrabold text-gray-900 font-jakarta leading-none">{countTotal}</div>
+            <div className="text-[11px] text-gray-400 mt-1.5 font-medium">Laporan terdaftar</div>
           </div>
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Baru</span>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-red-50 rounded-lg flex items-center justify-center">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          
+          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100/80 shadow-sm p-4 sm:p-5 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-red-500 rounded-t-xl sm:rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Baru</span>
+              <div className="w-9 h-9 bg-red-50/70 text-red-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-red-500">{countBaru}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Menunggu Tindakan</div>
+            <div className="text-2xl sm:text-3.5xl font-extrabold text-red-500 font-jakarta leading-none">{countBaru}</div>
+            <div className="text-[11px] text-gray-400 mt-1.5 font-medium">Menunggu tanggapan</div>
           </div>
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Proses</span>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-yellow-50 rounded-lg flex items-center justify-center">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+
+          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100/80 shadow-sm p-4 sm:p-5 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-amber-500 rounded-t-xl sm:rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Proses</span>
+              <div className="w-9 h-9 bg-amber-50/70 text-amber-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-yellow-500">{countProses}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Sedang Diproses</div>
+            <div className="text-2xl sm:text-3.5xl font-extrabold text-amber-500 font-jakarta leading-none">{countProses}</div>
+            <div className="text-[11px] text-gray-400 mt-1.5 font-medium">Sedang ditangani</div>
           </div>
-          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Selesai</span>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-green-50 rounded-lg flex items-center justify-center">
-                <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+
+          <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100/80 shadow-sm p-4 sm:p-5 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-green-500 rounded-t-xl sm:rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Selesai</span>
+              <div className="w-9 h-9 bg-green-50/70 text-green-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-green-500">{countSelesai}</div>
-            <div className="text-xs text-gray-400 mt-0.5">Terselesaikan</div>
+            <div className="text-2xl sm:text-3.5xl font-extrabold text-green-500 font-jakarta leading-none">{countSelesai}</div>
+            <div className="text-[11px] text-gray-400 mt-1.5 font-medium">Selesai diperbaiki</div>
           </div>
         </div>
 
@@ -279,11 +298,11 @@ export default function DashboardAdmin() {
         </div>
 
         {/* Filter & Search */}
-        <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm mb-4 fade-up">
-          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm mb-4 fade-up overflow-visible">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 overflow-visible">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 overflow-visible">
               <h2 className="font-bold text-gray-800 text-sm sm:text-base">Semua Laporan Masuk</h2>
-              <div className="flex flex-col xl:flex-row items-stretch xl:items-center gap-3 w-full xl:w-auto">
+              <div className="flex flex-col xl:flex-row items-stretch xl:items-center gap-3 w-full xl:w-auto overflow-visible">
                 {/* Search */}
                 <div className="relative flex-1 xl:flex-none">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -298,61 +317,182 @@ export default function DashboardAdmin() {
                   />
                 </div>
                 
-                <div className="flex flex-wrap gap-2.5">
-                  {/* Filter status */}
-                  <div className="relative flex-1 sm:flex-none">
-                    <select
-                      value={filterStatus}
-                      onChange={(e) => setFilterStatus(e.target.value)}
-                      className="appearance-none w-full sm:w-36 pl-4 pr-10 py-2.5 border border-slate-100 hover:border-slate-200 focus:border-blue-400 bg-slate-50 focus:bg-white text-slate-700 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-sm focus:outline-none"
+                <div className="flex flex-wrap gap-2.5 items-center overflow-visible">
+                  {/* Backdrop Overlay to close dropdowns */}
+                  {activeDropdown && (
+                    <div 
+                      className="fixed inset-0 z-30 cursor-default" 
+                      onClick={() => setActiveDropdown(null)} 
+                    />
+                  )}
+
+                  {/* Filter Status */}
+                  <div className="relative flex-1 sm:flex-none z-40">
+                    <button
+                      type="button"
+                      onClick={() => setActiveDropdown(activeDropdown === 'status' ? null : 'status')}
+                      className={`w-full sm:w-auto min-w-[130px] flex items-center justify-between gap-2 px-4 py-2.5 border text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm focus:outline-none ${
+                        filterStatus 
+                          ? 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100/70' 
+                          : 'border-slate-100 bg-slate-50 text-slate-700 hover:border-slate-200 hover:bg-slate-100/30'
+                      }`}
                     >
-                      <option value="">Semua Status</option>
-                      <option value="Baru">Baru</option>
-                      <option value="Diproses">Diproses</option>
-                      <option value="Selesai">Selesai</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    </div>
+                      <span>{filterStatus ? `Status: ${filterStatus}` : 'Semua Status'}</span>
+                      <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${activeDropdown === 'status' ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {activeDropdown === 'status' && (
+                      <div className="absolute right-0 sm:left-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-1.5 focus:outline-none animate-in fade-in slide-in-from-top-1 duration-150">
+                        {[
+                          { value: '', label: 'Semua Status' },
+                          { value: 'Baru', label: 'Baru' },
+                          { value: 'Diproses', label: 'Diproses' },
+                          { value: 'Selesai', label: 'Selesai' }
+                        ].map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => {
+                              setFilterStatus(opt.value);
+                              setActiveDropdown(null);
+                            }}
+                            className={`w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-left transition-colors cursor-pointer ${
+                              filterStatus === opt.value 
+                                ? 'bg-blue-50 text-blue-700' 
+                                : 'text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span>{opt.label}</span>
+                            {filterStatus === opt.value && <Check className="w-3.5 h-3.5 text-blue-600" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
-                  {/* Filter kategori */}
-                  <div className="relative flex-1 sm:flex-none">
-                    <select
-                      value={filterKategori}
-                      onChange={(e) => setFilterKategori(e.target.value)}
-                      className="appearance-none w-full sm:w-44 pl-4 pr-10 py-2.5 border border-slate-100 hover:border-slate-200 focus:border-blue-400 bg-slate-50 focus:bg-white text-slate-700 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-sm focus:outline-none"
+                  {/* Filter Kategori */}
+                  <div className="relative flex-1 sm:flex-none z-40">
+                    <button
+                      type="button"
+                      onClick={() => setActiveDropdown(activeDropdown === 'kategori' ? null : 'kategori')}
+                      className={`w-full sm:w-auto min-w-[150px] flex items-center justify-between gap-2 px-4 py-2.5 border text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm focus:outline-none ${
+                        filterKategori 
+                          ? 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100/70' 
+                          : 'border-slate-100 bg-slate-50 text-slate-700 hover:border-slate-200 hover:bg-slate-100/30'
+                      }`}
                     >
-                      <option value="">Semua Kategori</option>
-                      <option value="Gedung / Ruang Kelas">Gedung / Ruang Kelas</option>
-                      <option value="Toilet">Toilet</option>
-                      <option value="Parkiran">Parkiran</option>
-                      <option value="Kantin">Kantin</option>
-                      <option value="Laboratorium">Laboratorium</option>
-                      <option value="Perpustakaan">Perpustakaan</option>
-                      <option value="Wifi">Wifi</option>
-                    </select>
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    </div>
+                      <span className="truncate max-w-[130px]">
+                        {filterKategori ? `Kategori: ${filterKategori}` : 'Semua Kategori'}
+                      </span>
+                      <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${activeDropdown === 'kategori' ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {activeDropdown === 'kategori' && (
+                      <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-1.5 focus:outline-none animate-in fade-in slide-in-from-top-1 duration-150">
+                        {[
+                          { value: '', label: 'Semua Kategori' },
+                          { value: 'Gedung / Ruang Kelas', label: 'Gedung / Ruang Kelas' },
+                          { value: 'Toilet', label: 'Toilet' },
+                          { value: 'Parkiran', label: 'Parkiran' },
+                          { value: 'Kantin', label: 'Kantin' },
+                          { value: 'Laboratorium', label: 'Laboratorium' },
+                          { value: 'Perpustakaan', label: 'Perpustakaan' },
+                          { value: 'Wifi', label: 'Wifi' }
+                        ].map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => {
+                              setFilterKategori(opt.value);
+                              setActiveDropdown(null);
+                            }}
+                            className={`w-full flex items-center justify-between px-4 py-2 text-xs font-semibold text-left transition-colors cursor-pointer ${
+                              filterKategori === opt.value 
+                                ? 'bg-blue-50 text-blue-700' 
+                                : 'text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span>{opt.label}</span>
+                            {filterKategori === opt.value && <Check className="w-3.5 h-3.5 text-blue-600" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
-                  {/* Filter prodi */}
-                  <div className="relative flex-1 sm:flex-none">
-                    <select
-                      value={filterProdi}
-                      onChange={(e) => setFilterProdi(e.target.value)}
-                      className="appearance-none w-full sm:w-48 pl-4 pr-10 py-2.5 border border-slate-100 hover:border-slate-200 focus:border-blue-400 bg-slate-50 focus:bg-white text-slate-700 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-sm focus:outline-none"
+                  {/* Filter Prodi */}
+                  <div className="relative flex-1 sm:flex-none z-40">
+                    <button
+                      type="button"
+                      onClick={() => setActiveDropdown(activeDropdown === 'prodi' ? null : 'prodi')}
+                      className={`w-full sm:w-auto min-w-[155px] flex items-center justify-between gap-2 px-4 py-2.5 border text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm focus:outline-none ${
+                        filterProdi 
+                          ? 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100/70' 
+                          : 'border-slate-100 bg-slate-50 text-slate-700 hover:border-slate-200 hover:bg-slate-100/30'
+                      }`}
                     >
-                      <option value="">Semua Prodi</option>
-                      {ALL_PRODI.map((p) => (
-                        <option key={p} value={p}>{p}</option>
-                      ))}
-                    </select>
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
-                      <ChevronDown className="w-3.5 h-3.5" />
-                    </div>
+                      <span className="truncate max-w-[130px]">
+                        {filterProdi ? `Prodi: ${filterProdi}` : 'Semua Prodi'}
+                      </span>
+                      <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${activeDropdown === 'prodi' ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {activeDropdown === 'prodi' && (
+                      <div className="absolute right-0 mt-2 w-64 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-1.5 focus:outline-none max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent animate-in fade-in slide-in-from-top-1 duration-150">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFilterProdi('');
+                            setActiveDropdown(null);
+                          }}
+                          className={`w-full flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-left border-b border-slate-50 transition-colors cursor-pointer ${
+                            filterProdi === '' 
+                              ? 'bg-blue-50 text-blue-700 font-bold' 
+                              : 'text-slate-700 hover:bg-slate-50'
+                          }`}
+                        >
+                          <span>Semua Prodi</span>
+                          {filterProdi === '' && <Check className="w-3.5 h-3.5 text-blue-600" />}
+                        </button>
+                        {ALL_PRODI.map((p) => (
+                          <button
+                            key={p}
+                            type="button"
+                            onClick={() => {
+                              setFilterProdi(p);
+                              setActiveDropdown(null);
+                            }}
+                            className={`w-full flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-left transition-colors cursor-pointer ${
+                              filterProdi === p 
+                                ? 'bg-blue-50 text-blue-700 font-bold' 
+                                : 'text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span>{p}</span>
+                            {filterProdi === p && <Check className="w-3.5 h-3.5 text-blue-600" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Reset/Clear Button */}
+                  {(search || filterStatus || filterKategori || filterProdi) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearch('');
+                        setFilterStatus('');
+                        setFilterKategori('');
+                        setFilterProdi('');
+                        showToast('Filter berhasil disetel ulang', 'success');
+                      }}
+                      className="flex items-center gap-1.5 text-[11px] font-extrabold text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-2.5 rounded-xl transition-all cursor-pointer border border-transparent hover:border-red-100"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reset</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
