@@ -156,47 +156,59 @@ tr:hover td {
   display: flex;
   overflow: hidden;
   white-space: nowrap;
-  mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
 .stats-marquee-track {
   display: flex;
   align-items: center;
-  gap: 40px;
-  padding-right: 40px;
+  gap: 32px;
+  padding-right: 32px;
   flex-shrink: 0;
-  animation: statsScroll 15s linear infinite;
-}
-
-.stats-marquee:hover .stats-marquee-track {
-  animation-play-state: paused;
+  animation: statsScroll 22s linear infinite;
 }
 
 .stats-marquee-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.stats-marquee-item:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
 .stats-number {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
-  color: white;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .stats-label {
-  font-size: 13px;
-  color: rgba(191, 219, 254, 1);
-  font-weight: 500;
+  font-size: 12px;
+  color: #bfdbfe;
+  font-weight: 600;
+  letter-spacing: 0.025em;
 }
 
 .stats-marquee-divider {
-  color: rgba(147, 197, 253, 0.5);
-  font-size: 10px;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 14px;
+  font-weight: bold;
   flex-shrink: 0;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
 /* ============================================================
