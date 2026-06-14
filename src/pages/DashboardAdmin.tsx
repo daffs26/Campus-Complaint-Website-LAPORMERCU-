@@ -6,6 +6,7 @@ import { useToast } from '../components/Toast';
 import Modal from '../components/Modal';
 import { TableRowSkeleton, CardSkeleton } from '../components/Skeleton';
 import { PieChart, LineChart } from '../components/Charts';
+import { ChevronDown, Search } from 'lucide-react';
 
 export default function DashboardAdmin() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -282,58 +283,76 @@ export default function DashboardAdmin() {
           <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <h2 className="font-bold text-gray-800 text-sm sm:text-base">Semua Laporan Masuk</h2>
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+              <div className="flex flex-col xl:flex-row items-stretch xl:items-center gap-3 w-full xl:w-auto">
                 {/* Search */}
-                <div className="relative">
-                  <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                  </svg>
+                <div className="relative flex-1 xl:flex-none">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <Search className="w-4 h-4" />
+                  </div>
                   <input
                     type="text"
-                    placeholder="Cari laporan..."
+                    placeholder="Cari pelapor, judul, lokasi..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 w-full sm:w-52"
+                    className="w-full xl:w-60 pl-10 pr-4 py-2.5 border border-slate-100 hover:border-slate-200 focus:border-blue-400 bg-slate-50 focus:bg-white text-slate-700 font-semibold rounded-xl text-xs transition-all shadow-sm focus:outline-none"
                   />
                 </div>
-                <div className="flex flex-wrap gap-2">
+                
+                <div className="flex flex-wrap gap-2.5">
                   {/* Filter status */}
-                  <select
-                    value={filterStatus}
-                    onChange={(e) => setFilterStatus(e.target.value)}
-                    className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 bg-white"
-                  >
-                    <option value="">Semua Status</option>
-                    <option value="Baru">Baru</option>
-                    <option value="Diproses">Diproses</option>
-                    <option value="Selesai">Selesai</option>
-                  </select>
+                  <div className="relative flex-1 sm:flex-none">
+                    <select
+                      value={filterStatus}
+                      onChange={(e) => setFilterStatus(e.target.value)}
+                      className="appearance-none w-full sm:w-36 pl-4 pr-10 py-2.5 border border-slate-100 hover:border-slate-200 focus:border-blue-400 bg-slate-50 focus:bg-white text-slate-700 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-sm focus:outline-none"
+                    >
+                      <option value="">Semua Status</option>
+                      <option value="Baru">Baru</option>
+                      <option value="Diproses">Diproses</option>
+                      <option value="Selesai">Selesai</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+
                   {/* Filter kategori */}
-                  <select
-                    value={filterKategori}
-                    onChange={(e) => setFilterKategori(e.target.value)}
-                    className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 bg-white"
-                  >
-                    <option value="">Semua Kategori</option>
-                    <option value="Gedung / Ruang Kelas">Gedung / Ruang Kelas</option>
-                    <option value="Toilet">Toilet</option>
-                    <option value="Parkiran">Parkiran</option>
-                    <option value="Kantin">Kantin</option>
-                    <option value="Laboratorium">Laboratorium</option>
-                    <option value="Perpustakaan">Perpustakaan</option>
-                    <option value="Wifi">Wifi</option>
-                  </select>
+                  <div className="relative flex-1 sm:flex-none">
+                    <select
+                      value={filterKategori}
+                      onChange={(e) => setFilterKategori(e.target.value)}
+                      className="appearance-none w-full sm:w-44 pl-4 pr-10 py-2.5 border border-slate-100 hover:border-slate-200 focus:border-blue-400 bg-slate-50 focus:bg-white text-slate-700 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-sm focus:outline-none"
+                    >
+                      <option value="">Semua Kategori</option>
+                      <option value="Gedung / Ruang Kelas">Gedung / Ruang Kelas</option>
+                      <option value="Toilet">Toilet</option>
+                      <option value="Parkiran">Parkiran</option>
+                      <option value="Kantin">Kantin</option>
+                      <option value="Laboratorium">Laboratorium</option>
+                      <option value="Perpustakaan">Perpustakaan</option>
+                      <option value="Wifi">Wifi</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+
                   {/* Filter prodi */}
-                  <select
-                    value={filterProdi}
-                    onChange={(e) => setFilterProdi(e.target.value)}
-                    className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 bg-white"
-                  >
-                    <option value="">Semua Prodi</option>
-                    {ALL_PRODI.map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
+                  <div className="relative flex-1 sm:flex-none">
+                    <select
+                      value={filterProdi}
+                      onChange={(e) => setFilterProdi(e.target.value)}
+                      className="appearance-none w-full sm:w-48 pl-4 pr-10 py-2.5 border border-slate-100 hover:border-slate-200 focus:border-blue-400 bg-slate-50 focus:bg-white text-slate-700 font-bold rounded-xl text-xs transition-all cursor-pointer shadow-sm focus:outline-none"
+                    >
+                      <option value="">Semua Prodi</option>
+                      {ALL_PRODI.map((p) => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
