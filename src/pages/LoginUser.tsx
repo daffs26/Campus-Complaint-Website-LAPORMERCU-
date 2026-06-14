@@ -30,6 +30,14 @@ export default function LoginUser() {
     }
   };
 
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  const handleQuickLogin = () => {
+    const demoUser = USERS[0];
+    sessionStorage.setItem('loggedUser', JSON.stringify({ role: 'user', ...demoUser }));
+    navigate('/dashboard');
+  };
+
   return (
     <div className="bg-[#f3f4f6] min-h-screen flex items-center justify-center px-4 py-8 sm:py-12">
       <div className="w-full max-w-md fade-up">
@@ -120,10 +128,26 @@ export default function LoginUser() {
             </button>
           </form>
 
-          {/* Info demo */}
-          <div className="mt-5 bg-blue-50 border border-blue-100 rounded-xl p-3 sm:p-3.5">
-            <p className="text-xs text-blue-700 font-semibold mb-1">💡 Demo Login</p>
-            <p className="text-xs text-blue-600">NIM: <span className="font-mono font-bold">2024001</span> &nbsp;|&nbsp; Password: <span className="font-mono font-bold">mahasiswa123</span></p>
+          {/* Info demo & Quick Login (Local Only) */}
+          <div className="mt-5 bg-blue-50 border border-blue-100 rounded-xl p-3.5 sm:p-4 flex flex-col gap-2.5">
+            <div>
+              <p className="text-xs text-blue-700 font-semibold mb-1 flex items-center gap-1">
+                <span>💡 Demo Login</span>
+              </p>
+              <p className="text-xs text-blue-600">NIM: <span className="font-mono font-bold">2024001</span> &nbsp;|&nbsp; Password: <span className="font-mono font-bold">mahasiswa123</span></p>
+            </div>
+            {isLocal && (
+              <button
+                type="button"
+                onClick={handleQuickLogin}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Masuk Instan (Demo Mahasiswa)
+              </button>
+            )}
           </div>
         </div>
 

@@ -29,6 +29,14 @@ export default function LoginAdmin() {
     }
   };
 
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+  const handleQuickLogin = () => {
+    const demoAdmin = ADMINS[0];
+    sessionStorage.setItem('loggedUser', JSON.stringify({ role: 'admin', ...demoAdmin }));
+    navigate('/admin');
+  };
+
   return (
     <div className="admin-bg font-jakarta">
       {/* Decorative blurred circles */}
@@ -122,14 +130,28 @@ export default function LoginAdmin() {
             </button>
           </form>
 
-          {/* Demo info */}
-          <div className="demo-box">
-            <p className="demo-label">💡 Demo Login</p>
-            <p className="demo-text">
-              Username: <span className="demo-mono font-bold">admin</span>
-              &nbsp;|&nbsp;
-              Password: <span className="demo-mono font-bold">admin123</span>
-            </p>
+          {/* Demo info & Quick Login (Local Only) */}
+          <div className="demo-box flex flex-col gap-2.5">
+            <div>
+              <p className="demo-label">💡 Demo Login</p>
+              <p className="demo-text">
+                Username: <span className="demo-mono font-bold">admin</span>
+                &nbsp;|&nbsp;
+                Password: <span className="demo-mono font-bold">admin123</span>
+              </p>
+            </div>
+            {isLocal && (
+              <button
+                type="button"
+                onClick={handleQuickLogin}
+                className="w-full bg-white hover:bg-blue-50 text-blue-900 font-bold py-2.5 px-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Masuk Instan (Demo Admin)
+              </button>
+            )}
           </div>
         </div>
 
