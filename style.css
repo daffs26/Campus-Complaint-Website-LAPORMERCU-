@@ -1,0 +1,178 @@
+/* ============================================================
+   style.css — CSS Global SiLapor
+   Berlaku untuk semua halaman
+   ============================================================ */
+
+/* --- Typography --- */
+* {
+  font-family: 'DM Sans', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+h1, h2, h3, h4, label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Buttons --- */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* --- Status Badge --- */
+.status-baru     { background: #fee2e2; color: #dc2626; }
+.status-diproses { background: #fef3c7; color: #d97706; }
+.status-selesai  { background: #dcfce7; color: #16a34a; }
+
+/* --- Cards --- */
+.card-hover { transition: all 0.3s ease; }
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.12);
+}
+
+/* --- Form Inputs --- */
+.input-field { transition: all 0.2s ease; }
+.input-field:focus { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+
+/* --- Modal --- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.active { display: flex; }
+
+/* --- Error / Alert --- */
+.error-msg { display: none; }
+
+/* --- Tabs --- */
+.tab-active {
+  background: white;
+  color: #2563eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* --- Table --- */
+tr:hover td { background: #f8faff; }
+
+/* --- Mobile hamburger menu --- */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #4b5563;
+}
+
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 16px 24px;
+  z-index: 50;
+}
+.mobile-menu.active {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mobile-menu a {
+  padding: 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.mobile-menu a:hover {
+  color: #2563eb;
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up   { animation: fadeUp 0.6s ease forwards; }
+.fade-up-2 { animation: fadeUp 0.7s 0.15s ease forwards; opacity: 0; }
+.fade-up-3 { animation: fadeUp 0.7s 0.30s ease forwards; opacity: 0; }
+.fade-up-4 { animation: fadeUp 0.7s 0.45s ease forwards; opacity: 0; }
+
+/* ============================================================
+   Responsive — Mobile (max-width: 640px)
+   ============================================================ */
+@media (max-width: 640px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  /* Reduce card hover effect on touch devices */
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
+  }
+
+  /* Better touch targets */
+  .btn-primary {
+    min-height: 44px;
+  }
+
+  /* Modal full-width on mobile */
+  .modal-overlay > div {
+    max-width: 100%;
+    margin: 0 8px;
+    max-height: 85vh;
+  }
+}
+
+/* ============================================================
+   Responsive — Tablet (641px - 1024px)
+   ============================================================ */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .card-hover:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* ============================================================
+   Responsive — Desktop (min-width: 1025px)
+   ============================================================ */
+@media (min-width: 1025px) {
+  /* Desktop-specific styles */
+}

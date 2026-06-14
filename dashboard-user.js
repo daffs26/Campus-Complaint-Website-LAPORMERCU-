@@ -1,0 +1,136 @@
+/* ============================================================
+   dashboard-user.js — JS khusus Dashboard Mahasiswa
+   ============================================================ */
+
+let laporan = [
+  { id: 1, nim: '2024001', judul: 'AC Rusak Tidak Berfungsi', kategori: 'Laboratorium', lokasi: 'Lab Komputer Lt.2', deskripsi: 'AC di lab komputer sudah 3 hari tidak berfungsi, ruangan sangat panas.', tanggal: '2025-01-15', status: 'Diproses' },
+  { id: 2, nim: '2024001', judul: 'Proyektor Bermasalah', kategori: 'Gedung / Ruang Kelas', lokasi: 'Ruang 301 Gedung A', deskripsi: 'Proyektor tidak bisa menampilkan gambar dengan jelas.', tanggal: '2025-01-10', status: 'Selesai' },
+];
+
+let currentUser = null;
+
+window.onload = function () {
+  currentUser = getLoggedUser();
+  if (!currentUser) { window.location.href = 'login-user.html'; return; }
+  if (currentUser.role !== 'user') { window.location.href = 'login-user.html'; return; }
+
+  // Isi info user di navbar & form
+  document.getElementById('navName').textContent  = currentUser.name;
+  document.getElementById('navNIM').textContent   = currentUser.nim;
+  document.getElementById('userName').textContent = currentUser.name.split(' ')[0];
+  document.getElementById('formName').textContent  = currentUser.name;
+  document.getElementById('formNIM').textContent   = currentUser.nim;
+  document.getElementById('formProdi').textContent = currentUser.prodi;
+
+  renderLaporan();
+};
+
+function showTab(tab) {
+  document.getElementById('panel-laporan').classList.toggle('hidden', tab !== 'laporan');
+  document.getElementById('panel-buat').classList.toggle('hidden', tab !== 'buat');
+
+  const tabLaporan = document.getElementById('tab-laporan');
+  const tabBuat = document.getElementById('tab-buat');
+
+  if (tab === 'laporan') {
+    tabLaporan.className = 'tab-active px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all';
+    tabBuat.className = 'px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all';
+  } else {
+    tabBuat.className = 'tab-active px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all';
+    tabLaporan.className = 'px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-500 transition-all';
+  }
+}
+
+function renderLaporan() {
+  const myLaporan = laporan.filter(l => l.nim === currentUser.nim);
+  const list    = document.getElementById('laporanList');
+  const empty   = document.getElementById('emptyState');
+  const count   = document.getElementById('laporanCount');
+
+  document.getElementById('statTotal').textContent   = myLaporan.length;
+  document.getElementById('statProses').textContent  = myLaporan.filter(l => l.status === 'Diproses').length;
+  document.getElementById('statSelesai').textContent = myLaporan.filter(l => l.status === 'Selesai').length;
+  count.textContent = `${myLaporan.length} laporan`;
+
+  if (myLaporan.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  list.innerHTML = myLaporan.map(l => {
+    const statusClass = l.status === 'Baru' ? 'status-baru' : l.status === 'Diproses' ? 'status-diproses' : 'status-selesai';
+    return `
+      <div class="laporan-item px-4 sm:px-6 py-4 sm:py-5 hover:bg-gray-50 transition-colors">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <h3 class="font-semibold text-gray-800 text-sm sm:text-base leading-snug">${l.judul}</h3>
+          <span class="text-xs px-2.5 py-0.5 rounded-full font-medium ${statusClass} flex-shrink-0">${l.status}</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-3 mb-3">
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="text-gray-400 w-4 text-center flex-shrink-0">📌</span>
+            <span><span class="text-gray-400 font-medium">Kategori:</span> ${l.kategori}</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="text-gray-400 w-4 text-center flex-shrink-0">📍</span>
+            <span><span class="text-gray-400 font-medium">Lokasi:</span> ${l.lokasi}</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="text-gray-400 w-4 text-center flex-shrink-0">📅</span>
+            <span><span class="text-gray-400 font-medium">Tanggal:</span> ${l.tanggal}</span>
+          </div>
+        </div>
+        <div class="bg-gray-50 rounded-lg px-3 py-2">
+          <p class="text-xs text-gray-500 leading-relaxed">${l.deskripsi}</p>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function handleFoto(input) {
+  const file = input.files[0];
+  if (file) {
+    document.getElementById('fotoLabel').textContent = `✅ ${file.name}`;
+    document.getElementById('dropzone').classList.add('border-blue-300', 'bg-blue-50');
+  }
+}
+
+function submitLaporan() {
+  const kategori  = document.getElementById('kategori').value;
+  const lokasi    = document.getElementById('lokasi').value.trim();
+  const judul     = document.getElementById('judul').value.trim();
+  const deskripsi = document.getElementById('deskripsi').value.trim();
+  const errorEl   = document.getElementById('formError');
+
+  if (!kategori || !lokasi || !judul || !deskripsi) {
+    errorEl.textContent = '⚠️ Semua field bertanda * wajib diisi.';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+  errorEl.classList.add('hidden');
+
+  laporan.push({
+    id: laporan.length + 1,
+    nim: currentUser.nim,
+    judul, kategori, lokasi, deskripsi,
+    tanggal: getTodayDate(),
+    status: 'Baru'
+  });
+
+  // Reset form
+  ['kategori', 'lokasi', 'judul', 'deskripsi'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('fotoLabel').textContent = 'Klik untuk upload foto';
+  document.getElementById('fotoInput').value = '';
+  document.getElementById('dropzone').classList.remove('border-blue-300', 'bg-blue-50');
+
+  document.getElementById('modalSukses').classList.add('active');
+  renderLaporan();
+}
+
+function tutupModal() {
+  document.getElementById('modalSukses').classList.remove('active');
+  showTab('laporan');
+}

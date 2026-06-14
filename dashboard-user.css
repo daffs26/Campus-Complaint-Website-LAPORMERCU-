@@ -1,0 +1,29 @@
+/* ============================================================
+   dashboard-user.css — CSS khusus Dashboard Mahasiswa
+   ============================================================ */
+
+/* Laporan list item mobile-friendly */
+.laporan-item {
+  transition: background 0.15s;
+}
+.laporan-item:hover {
+  background: #f9fafb;
+}
+
+/* ============================================================
+   Responsive — Mobile
+   ============================================================ */
+@media (max-width: 640px) {
+  /* Laporan list items: stack meta info */
+  .laporan-meta {
+    flex-direction: column;
+    gap: 4px !important;
+  }
+}
+
+/* ============================================================
+   Responsive — Tablet
+   ============================================================ */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Tablet-specific if needed */
+}

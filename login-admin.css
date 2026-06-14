@@ -1,0 +1,260 @@
+/* ============================================================
+   login-admin.css — CSS khusus Login Admin
+   ============================================================ */
+
+.admin-bg {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-container {
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  z-index: 10;
+}
+
+.deco {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  filter: blur(40px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.input-admin {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 12px 12px 12px 40px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+.input-admin::placeholder { color: rgba(147, 197, 253, 0.8); }
+.input-admin:focus {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+}
+
+.admin-input-wrap {
+  position: relative;
+}
+
+.admin-field {
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.admin-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-admin {
+  width: 100%;
+  background: white;
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.btn-admin:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+.btn-admin:active {
+  transform: translateY(0);
+}
+
+.error-box {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(252, 165, 165, 0.3);
+  color: #fecaca;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 13px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.demo-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 20px;
+}
+
+.demo-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(147, 197, 253, 1);
+  margin: 0 0 4px;
+}
+
+.demo-text {
+  font-size: 12px;
+  color: rgba(219, 234, 254, 1);
+  margin: 0;
+}
+
+.demo-mono {
+  font-family: monospace;
+  font-weight: 700;
+}
+
+.label-admin {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(191, 219, 254, 1);
+  margin-bottom: 6px;
+}
+
+/* Logo section */
+.admin-logo-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.admin-logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+
+.admin-logo-icon {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-logo-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: white;
+}
+
+.admin-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 6px;
+}
+
+.admin-subtitle {
+  color: rgba(147, 197, 253, 1);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Footer links */
+.admin-footer-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.admin-footer-text {
+  font-size: 14px;
+  color: rgba(147, 197, 253, 1);
+  margin: 0 0 8px;
+}
+
+.admin-footer-link {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+.admin-footer-link:hover {
+  text-decoration: underline;
+}
+
+.admin-footer-back {
+  font-size: 12px;
+  color: rgba(147, 197, 253, 0.8);
+  text-decoration: none;
+  display: inline-block;
+}
+.admin-footer-back:hover {
+  color: rgba(147, 197, 253, 1);
+}
+
+/* ============================================================
+   Responsive — Mobile
+   ============================================================ */
+@media (max-width: 640px) {
+  .admin-bg {
+    padding: 24px 12px;
+  }
+
+  .glass-card {
+    padding: 24px 16px;
+  }
+
+  .admin-title {
+    font-size: 20px;
+  }
+
+  .admin-logo-text {
+    font-size: 18px;
+  }
+
+  .admin-logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .admin-logo-section {
+    margin-bottom: 24px;
+  }
+}
