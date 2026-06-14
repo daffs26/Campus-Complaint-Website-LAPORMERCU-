@@ -9,6 +9,11 @@ export default function LoginAdmin() {
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
+  const handleQuickLogin = () => {
+    sessionStorage.setItem('loggedUser', JSON.stringify({ username: 'admin', name: 'Administrator', role: 'admin' }));
+    navigate('/admin');
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password) {
@@ -116,6 +121,27 @@ export default function LoginAdmin() {
               </svg>
               Masuk sebagai Admin
             </button>
+
+            {/* Quick Login & Helper Info */}
+            <div className="mt-5 space-y-4">
+              <button
+                type="button"
+                onClick={handleQuickLogin}
+                className="w-full bg-white hover:bg-blue-50 text-blue-900 font-bold py-3 px-4 rounded-xl text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Masuk Instan
+              </button>
+
+              <div className="p-3 bg-white/10 border border-white/10 rounded-xl text-center">
+                <p className="text-[10px] font-extrabold text-blue-200/80 uppercase tracking-widest mb-1">Akun Admin Uji Coba (Testing)</p>
+                <p className="text-xs text-white font-medium">
+                  Username: <span className="font-mono font-bold">admin</span> &nbsp;|&nbsp; Password: <span className="font-mono font-bold">lapormercu123</span>
+                </p>
+              </div>
+            </div>
           </form>
         </div>
 
