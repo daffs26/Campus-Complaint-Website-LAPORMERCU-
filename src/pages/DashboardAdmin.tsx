@@ -65,7 +65,10 @@ export default function DashboardAdmin() {
   // Distribusi kategori untuk Pie Chart
   const kategoriCounts: { [key: string]: number } = {};
   laporanList.forEach(l => {
-    kategoriCounts[l.kategori] = (kategoriCounts[l.kategori] || 0) + 1;
+    const cats = l.kategori ? l.kategori.split(', ') : [];
+    cats.forEach(c => {
+      kategoriCounts[c] = (kategoriCounts[c] || 0) + 1;
+    });
   });
   const availableKategori = [
     { name: 'Gedung / Ruang Kelas', color: '#3b82f6' },
@@ -110,7 +113,7 @@ export default function DashboardAdmin() {
       l.lokasi.toLowerCase().includes(search.toLowerCase());
     
     const matchStatus = !filterStatus || l.status === filterStatus;
-    const matchKategori = !filterKategori || l.kategori === filterKategori;
+    const matchKategori = !filterKategori || (l.kategori && l.kategori.split(', ').includes(filterKategori));
 
     return matchSearch && matchStatus && matchKategori;
   });

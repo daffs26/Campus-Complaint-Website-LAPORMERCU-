@@ -30,7 +30,10 @@ import {
   Menu, 
   HelpCircle,
   TrendingUp,
-  ArrowUpDown
+  ArrowUpDown,
+  Check,
+  ChevronRight,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function DashboardUser() {
@@ -46,8 +49,9 @@ export default function DashboardUser() {
   // Expanded report state (Accordion)
   const [expandedReportId, setExpandedReportId] = useState<number | null>(null);
 
-  // Form states
-  const [kategori, setKategori] = useState('');
+  // Form states (Wizard)
+  const [formStep, setFormStep] = useState<1 | 2>(1);
+  const [selectedKategori, setSelectedKategori] = useState<string[]>([]);
   const [lokasi, setLokasi] = useState('');
   const [judul, setJudul] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
@@ -184,9 +188,32 @@ export default function DashboardUser() {
     setFotoName('Klik untuk upload foto');
   };
 
+  const toggleKategori = (catName: string) => {
+    if (selectedKategori.includes(catName)) {
+      setSelectedKategori(selectedKategori.filter(c => c !== catName));
+    } else {
+      setSelectedKategori([...selectedKategori, catName]);
+    }
+  };
+
+  const handleNextStep = () => {
+    if (selectedKategori.length === 0) {
+      setFormError('⚠️ Silakan pilih minimal 1 kategori fasilitas.');
+      showToast('Pilih minimal 1 kategori!', 'error');
+      return;
+    }
+    if (!lokasi.trim()) {
+      setFormError('⚠️ Silakan isi lokasi detail kerusakan.');
+      showToast('Isi lokasi detail!', 'error');
+      return;
+    }
+    setFormError('');
+    setFormStep(2);
+  };
+
   const submitLaporan = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!kategori || !lokasi.trim() || !judul.trim() || !deskripsi.trim()) {
+    if (selectedKategori.length === 0 || !lokasi.trim() || !judul.trim() || !deskripsi.trim()) {
       setFormError('⚠️ Semua field bertanda * wajib diisi.');
       showToast('Harap lengkapi semua field wajib!', 'error');
       return;
@@ -201,7 +228,7 @@ export default function DashboardUser() {
       nama: currentUser?.name || 'Mahasiswa',
       prodi: currentUser?.prodi || 'Sistem Informasi',
       judul: judul.trim(),
-      kategori,
+      kategori: selectedKategori.join(', '),
       lokasi: lokasi.trim(),
       deskripsi: deskripsi.trim(),
       tanggal: getTodayDate(),
@@ -214,13 +241,14 @@ export default function DashboardUser() {
     setLaporanList(updatedList);
 
     // Reset Form
-    setKategori('');
+    setSelectedKategori([]);
     setLokasi('');
     setJudul('');
     setDeskripsi('');
     setFotoName('Klik untuk upload foto');
     setFotoPreview(null);
     setFotoBase64(null);
+    setFormStep(1);
 
     showToast('Laporan pengaduan berhasil dikirim!', 'success');
     setShowSuccessModal(true);
@@ -703,7 +731,7 @@ export default function DashboardUser() {
           <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-8 w-full fade-up">
             
             {/* Header info */}
-            <div className="text-center max-w-md mx-auto mb-8">
+            <div className="text-center max-w-md mx-auto mb-6">
               <span className="w-10 h-10 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mx-auto mb-3">
                 <Plus className="w-5 h-5" />
               </span>
@@ -715,193 +743,288 @@ export default function DashboardUser() {
               </p>
             </div>
 
+            {/* Visual Progress Stepper */}
+            <div className="max-w-md mx-auto mb-8">
+              <div className="flex items-center justify-center">
+                {/* Step 1 Indicator */}
+                <div className="flex items-center">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 border ${
+                    formStep === 1
+                      ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/20'
+                      : 'bg-emerald-500 border-emerald-500 text-white'
+                  }`}>
+                    {formStep > 1 ? <Check className="w-4 h-4" /> : '1'}
+                  </div>
+                  <span className={`ml-2 text-xs font-bold transition-colors ${
+                    formStep === 1 ? 'text-blue-600' : 'text-emerald-500'
+                  }`}>
+                    Kategori & Lokasi
+                  </span>
+                </div>
+
+                {/* Line Separator */}
+                <div className="w-12 h-0.5 mx-3 bg-slate-100 relative">
+                  <div className={`absolute inset-0 bg-blue-600 transition-all duration-300 ${
+                    formStep === 2 ? 'w-full' : 'w-0'
+                  }`}></div>
+                </div>
+
+                {/* Step 2 Indicator */}
+                <div className="flex items-center">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 border ${
+                    formStep === 2
+                      ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/20'
+                      : 'bg-slate-100 border-slate-200 text-slate-400'
+                  }`}>
+                    2
+                  </div>
+                  <span className={`ml-2 text-xs font-bold transition-colors ${
+                    formStep === 2 ? 'text-blue-600' : 'text-slate-400'
+                  }`}>
+                    Detail & Foto
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {/* Auto-filled details card */}
             <div className="bg-blue-50/40 border border-blue-100/30 rounded-2xl p-4 mb-6">
-              <p className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-2">Profil Pelapor</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <p className="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-1.5">Profil Pelapor</p>
+              <div className="grid grid-cols-3 gap-3 text-[11px]">
                 <div>
-                  <span className="text-slate-400 text-[10px]">Nama Mahasiswa</span>
-                  <p className="font-extrabold text-slate-700">{currentUser?.name}</p>
+                  <span className="text-slate-400 text-[9px] block">Nama Mahasiswa</span>
+                  <p className="font-extrabold text-slate-700 truncate">{currentUser?.name}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 text-[10px]">NIM Pelapor</span>
+                  <span className="text-slate-400 text-[9px] block">NIM Pelapor</span>
                   <p className="font-extrabold text-slate-700">{currentUser?.nim}</p>
                 </div>
                 <div>
-                  <span className="text-slate-400 text-[10px]">Program Studi</span>
-                  <p className="font-extrabold text-slate-700">{currentUser?.prodi}</p>
+                  <span className="text-slate-400 text-[9px] block">Program Studi</span>
+                  <p className="font-extrabold text-slate-700 truncate">{currentUser?.prodi}</p>
                 </div>
               </div>
             </div>
 
             <form onSubmit={submitLaporan} className="space-y-6">
               
-              {/* Category Grid Cards */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest mb-2.5">
-                  Kategori Fasilitas <span className="text-rose-500">*</span>
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {categories.map((cat) => {
-                    const IconComp = cat.icon;
-                    const isActive = kategori === cat.name;
-                    return (
-                      <button
-                        key={cat.name}
-                        type="button"
-                        onClick={() => setKategori(cat.name)}
-                        className={`p-4.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex gap-3.5 group select-none ${
-                          isActive 
-                            ? 'border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-500/15' 
-                            : cat.color
-                        }`}
-                      >
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                          isActive ? 'bg-white/20 text-white' : 'bg-white shadow-sm'
-                        }`}>
-                          <IconComp className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h4 className="font-extrabold text-xs sm:text-sm leading-tight">{cat.name}</h4>
-                          <p className={`text-[10px] mt-0.5 leading-tight line-clamp-2 ${isActive ? 'text-white/80' : 'text-slate-400'}`}>
-                            {cat.desc}
-                          </p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Lokasi */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
-                    Lokasi Detail <span className="text-rose-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                      <MapPin className="w-4 h-4" />
+              {/* STEP 1: CATEGORY & LOCATION */}
+              {formStep === 1 && (
+                <div className="space-y-6 animate-fade-left">
+                  {/* Category Grid Cards */}
+                  <div>
+                    <div className="flex justify-between items-end mb-2.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest leading-none">
+                        Pilih Kategori Fasilitas <span className="text-rose-500">*</span>
+                      </label>
+                      <span className="text-[10px] font-extrabold text-slate-400 italic">
+                        Bisa memilih lebih dari 1 kategori
+                      </span>
                     </div>
-                    <input
-                      type="text"
-                      placeholder="Gedung, lantai, nomor ruangan..."
-                      value={lokasi}
-                      onChange={(e) => setLokasi(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-slate-100 hover:border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-400 bg-slate-50 focus:bg-white transition-all"
-                    />
-                  </div>
-                </div>
 
-                {/* Judul */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
-                    Judul Laporan <span className="text-rose-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                      <Tag className="w-4 h-4" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {categories.map((cat) => {
+                        const IconComp = cat.icon;
+                        const isActive = selectedKategori.includes(cat.name);
+                        return (
+                          <button
+                            key={cat.name}
+                            type="button"
+                            onClick={() => toggleKategori(cat.name)}
+                            className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex gap-3.5 group select-none relative ${
+                              isActive 
+                                ? 'border-blue-600 bg-blue-600 text-white shadow-lg shadow-blue-500/15' 
+                                : cat.color
+                            }`}
+                          >
+                            {/* Checkbox indicator */}
+                            {isActive && (
+                              <span className="absolute top-2.5 right-2.5 w-4 h-4 bg-white text-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                                <Check className="w-2.5 h-2.5 stroke-[3]" />
+                              </span>
+                            )}
+                            
+                            <div className={`w-9.5 h-9.5 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                              isActive ? 'bg-white/20 text-white' : 'bg-white shadow-sm'
+                            }`}>
+                              <IconComp className="w-5 h-5" />
+                            </div>
+                            <div className="pr-4">
+                              <h4 className="font-extrabold text-xs sm:text-sm leading-tight">{cat.name}</h4>
+                              <p className={`text-[9px] mt-0.5 leading-tight line-clamp-2 ${isActive ? 'text-white/80' : 'text-slate-400'}`}>
+                                {cat.desc}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
-                    <input
-                      type="text"
-                      placeholder="Nama kerusakan/masalah singkat..."
-                      value={judul}
-                      onChange={(e) => setJudul(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-slate-100 hover:border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-400 bg-slate-50 focus:bg-white transition-all"
-                    />
                   </div>
-                </div>
-              </div>
 
-              {/* Deskripsi */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
-                  Deskripsi Masalah <span className="text-rose-500">*</span>
-                </label>
-                <textarea
-                  rows={4}
-                  placeholder="Ceritakan secara detail kronologi atau kondisi kerusakan..."
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-100 hover:border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-400 bg-slate-50 focus:bg-white transition-all resize-none"
-                ></textarea>
-              </div>
-
-              {/* Upload foto */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
-                  Foto Bukti Lampiran (Opsional)
-                </label>
-                <div
-                  onClick={() => document.getElementById('fotoInput')?.click()}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 relative group overflow-hidden ${
-                    isDragging
-                      ? 'border-blue-500 bg-blue-50/70 scale-[0.99]'
-                      : fotoPreview
-                      ? 'border-blue-400 bg-blue-50/10'
-                      : 'border-slate-100 hover:border-blue-400 hover:bg-slate-50/20'
-                  }`}
-                >
-                  {fotoPreview ? (
-                    <div className="relative flex flex-col items-center justify-center py-2">
-                      <img 
-                        src={fotoPreview} 
-                        alt="Pratinjau foto" 
-                        className="max-h-48 rounded-xl object-contain shadow-md border border-slate-100 mb-3"
-                      />
-                      <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
-                        <FileImage className="w-4 h-4 text-blue-500" />
-                        <span className="truncate max-w-[200px]">{fotoName}</span>
+                  {/* Lokasi */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
+                      Lokasi Detail Kerusakan <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <MapPin className="w-4 h-4" />
                       </div>
-                      <button
-                        type="button"
-                        onClick={removeFoto}
-                        className="absolute top-0 right-0 p-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full transition-colors shadow-lg cursor-pointer"
-                        title="Hapus foto"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                      <input
+                        type="text"
+                        placeholder="Contoh: Gedung A Lantai 3 Ruang 301, Kantin Belakang, dll..."
+                        value={lokasi}
+                        onChange={(e) => setLokasi(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 border border-slate-100 hover:border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-400 bg-slate-50 focus:bg-white transition-all"
+                      />
                     </div>
-                  ) : (
-                    <div className="py-2">
-                      <UploadCloud className={`w-10 h-10 mx-auto mb-2.5 transition-transform duration-300 ${isDragging ? 'scale-110 text-blue-500' : 'text-slate-400 group-hover:text-blue-500'}`} />
-                      <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1">
-                        Tarik & lepas gambar di sini, atau <span className="text-blue-600 hover:underline">klik untuk memilih</span>
-                      </p>
-                      <p className="text-[10px] text-slate-400">Mendukung format JPG, PNG (Maksimal 2MB)</p>
+                  </div>
+
+                  {/* Step 1 Error */}
+                  {formError && formStep === 1 && (
+                    <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs px-4 py-3 rounded-xl font-bold flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{formError}</span>
                     </div>
                   )}
-                </div>
-                <input
-                  id="fotoInput"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFotoChange}
-                />
-              </div>
 
-              {/* Error msg */}
-              {formError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm px-4 py-3.5 rounded-xl font-bold flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{formError}</span>
+                  {/* Button Next */}
+                  <button
+                    type="button"
+                    onClick={handleNextStep}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-blue-500/10 active:scale-[0.99] transition-all text-xs sm:text-sm"
+                  >
+                    Lanjut ke Deskripsi & Foto
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               )}
 
-              {/* Submit */}
-              <button 
-                type="submit" 
-                className="btn-primary w-full text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-blue-500/10 active:scale-[0.99] transition-all"
-              >
-                <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                </svg>
-                Kirim Pengaduan Sekarang
-              </button>
+              {/* STEP 2: DETAILS & FOTO */}
+              {formStep === 2 && (
+                <div className="space-y-6 animate-fade-left">
+                  <div className="grid grid-cols-1 gap-4">
+                    {/* Judul */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
+                        Judul Laporan Pengaduan <span className="text-rose-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <Tag className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Contoh: AC Bocor, Wifi Susah Connect..."
+                          value={judul}
+                          onChange={(e) => setJudul(e.target.value)}
+                          className="w-full pl-10 pr-4 py-3 border border-slate-100 hover:border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-400 bg-slate-50 focus:bg-white transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Deskripsi */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
+                        Deskripsi Lengkap Masalah <span className="text-rose-500">*</span>
+                      </label>
+                      <textarea
+                        rows={4}
+                        placeholder="Jelaskan secara mendalam tentang tingkat kerusakan atau kronologi masalah sarana/prasarana..."
+                        value={deskripsi}
+                        onChange={(e) => setDeskripsi(e.target.value)}
+                        className="w-full px-4 py-3 border border-slate-100 hover:border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-400 bg-slate-50 focus:bg-white transition-all resize-none"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  {/* Upload foto */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-widest">
+                      Unggah Bukti Foto Lampiran (Opsional)
+                    </label>
+                    <div
+                      onClick={() => document.getElementById('fotoInput')?.click()}
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 relative group overflow-hidden ${
+                        isDragging
+                          ? 'border-blue-500 bg-blue-50/70 scale-[0.99]'
+                          : fotoPreview
+                          ? 'border-blue-400 bg-blue-50/10'
+                          : 'border-slate-100 hover:border-blue-400 hover:bg-slate-50/20'
+                      }`}
+                    >
+                      {fotoPreview ? (
+                        <div className="relative flex flex-col items-center justify-center py-2">
+                          <img 
+                            src={fotoPreview} 
+                            alt="Pratinjau foto" 
+                            className="max-h-48 rounded-xl object-contain shadow-md border border-slate-100 mb-3"
+                          />
+                          <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
+                            <FileImage className="w-4 h-4 text-blue-500" />
+                            <span className="truncate max-w-[200px]">{fotoName}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={removeFoto}
+                            className="absolute top-0 right-0 p-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full transition-colors shadow-lg cursor-pointer"
+                            title="Hapus foto"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="py-2">
+                          <UploadCloud className={`w-10 h-10 mx-auto mb-2.5 transition-transform duration-300 ${isDragging ? 'scale-110 text-blue-500' : 'text-slate-400 group-hover:text-blue-500'}`} />
+                          <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1">
+                            Tarik & lepas gambar di sini, atau <span className="text-blue-600 hover:underline">klik untuk memilih</span>
+                          </p>
+                          <p className="text-[10px] text-slate-400">Mendukung format JPG, PNG (Maksimal 2MB)</p>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      id="fotoInput"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleFotoChange}
+                    />
+                  </div>
+
+                  {/* Step 2 Error */}
+                  {formError && formStep === 2 && (
+                    <div className="bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm px-4 py-3.5 rounded-xl font-bold flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{formError}</span>
+                    </div>
+                  )}
+
+                  {/* Back & Submit buttons */}
+                  <div className="flex flex-col sm:flex-row gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setFormStep(1)}
+                      className="w-full sm:w-1/3 border border-slate-100 text-slate-500 font-bold py-3.5 rounded-xl text-xs sm:text-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      Kembali Ke Kategori
+                    </button>
+                    <button 
+                      type="submit" 
+                      className="w-full sm:w-2/3 btn-primary text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-blue-500/10 active:scale-[0.99] transition-all text-xs sm:text-sm"
+                    >
+                      Kirim Laporan Pengaduan
+                      <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
             </form>
           </div>
         )}
