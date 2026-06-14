@@ -180,7 +180,7 @@ export default function LandingPage() {
       </section>
 
       {/* STATS MARQUEE */}
-      <section id="stats" className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 py-5 border-y border-white/10 overflow-hidden shadow-inner">
+      <section id="stats" className="bg-blue-600 py-4 overflow-hidden">
         <div className="stats-marquee">
           {/* Track 1 */}
           <div className="stats-marquee-track">
