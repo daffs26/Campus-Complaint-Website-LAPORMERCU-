@@ -19,4 +19,5 @@ export interface Laporan {
   status: 'Baru' | 'Diproses' | 'Selesai';
   rating?: number;
   feedback?: string;
+  foto?: string;
 }

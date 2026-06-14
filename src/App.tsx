@@ -4,19 +4,22 @@ import LoginUser from './pages/LoginUser';
 import LoginAdmin from './pages/LoginAdmin';
 import DashboardUser from './pages/DashboardUser';
 import DashboardAdmin from './pages/DashboardAdmin';
+import { ToastProvider } from './components/Toast';
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginUser />} />
-        <Route path="/login-admin" element={<LoginAdmin />} />
-        <Route path="/dashboard" element={<DashboardUser />} />
-        <Route path="/admin" element={<DashboardAdmin />} />
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+    <ToastProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginUser />} />
+          <Route path="/login-admin" element={<LoginAdmin />} />
+          <Route path="/dashboard" element={<DashboardUser />} />
+          <Route path="/admin" element={<DashboardAdmin />} />
+          {/* Fallback route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    </ToastProvider>
   );
 }

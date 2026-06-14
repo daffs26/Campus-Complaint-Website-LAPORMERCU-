@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLaporan, saveLaporan, formatTanggal, getTodayDate } from '../utils';
 import type { Laporan, User } from '../types';
-
+import { useToast } from '../components/Toast';
+import Modal from '../components/Modal';
+import { CardSkeleton } from '../components/Skeleton';
+import { UploadCloud, X, FileImage } from 'lucide-react';
 
 export default function DashboardUser() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -15,12 +18,19 @@ export default function DashboardUser() {
   const [judul, setJudul] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
   const [fotoName, setFotoName] = useState('Klik untuk upload foto');
-  const [fotoUploaded, setFotoUploaded] = useState(false);
   const [formError, setFormError] = useState('');
 
-  // Modals
+  // Modals & Enhanced features
+  const { showToast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // Drag & Drop / Preview states
+  const [isDragging, setIsDragging] = useState(false);
+  const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+  const [fotoBase64, setFotoBase64] = useState<string | null>(null);
 
   // Rating selections
   const [selectedRatingId, setSelectedRatingId] = useState<number | null>(null);
@@ -45,6 +55,15 @@ export default function DashboardUser() {
     setLaporanList(getLaporan());
   }, [navigate]);
 
+  // Jeda loading buatan saat berpindah tab
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 750);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
+
   const handleLogout = () => {
     sessionStorage.removeItem('loggedUser');
     navigate('/');
@@ -55,18 +74,66 @@ export default function DashboardUser() {
   const countProses = myLaporan.filter(l => l.status === 'Diproses').length;
   const countSelesai = myLaporan.filter(l => l.status === 'Selesai').length;
 
+  const handleFileSelect = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      showToast('File harus berupa gambar (JPG/PNG)!', 'error');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Ukuran gambar maksimal 2MB!', 'error');
+      return;
+    }
+
+    setFotoName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64Url = e.target?.result as string;
+      setFotoPreview(base64Url);
+      setFotoBase64(base64Url);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFotoName(`✅ ${file.name}`);
-      setFotoUploaded(true);
+      handleFileSelect(file);
     }
+  };
+
+  // Drag & drop handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      handleFileSelect(file);
+    }
+  };
+
+  const removeFoto = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFotoPreview(null);
+    setFotoBase64(null);
+    setFotoName('Klik untuk upload foto');
   };
 
   const submitLaporan = (e: React.FormEvent) => {
     e.preventDefault();
     if (!kategori || !lokasi.trim() || !judul.trim() || !deskripsi.trim()) {
       setFormError('⚠️ Semua field bertanda * wajib diisi.');
+      showToast('Harap lengkapi semua field wajib!', 'error');
       return;
     }
     setFormError('');
@@ -83,7 +150,8 @@ export default function DashboardUser() {
       lokasi: lokasi.trim(),
       deskripsi: deskripsi.trim(),
       tanggal: getTodayDate(),
-      status: 'Baru'
+      status: 'Baru',
+      foto: fotoBase64 || undefined
     };
 
     const updatedList = [...allReports, newReport];
@@ -96,8 +164,10 @@ export default function DashboardUser() {
     setJudul('');
     setDeskripsi('');
     setFotoName('Klik untuk upload foto');
-    setFotoUploaded(false);
+    setFotoPreview(null);
+    setFotoBase64(null);
 
+    showToast('Laporan pengaduan berhasil dikirim!', 'success');
     setShowSuccessModal(true);
   };
 
@@ -132,6 +202,7 @@ export default function DashboardUser() {
       allReports[idx].feedback = ratingComment.trim();
       saveLaporan(allReports);
       setLaporanList(allReports);
+      showToast('Ulasan dan rating berhasil dikirim!', 'success');
     }
     setShowRatingModal(false);
   };
@@ -159,7 +230,7 @@ export default function DashboardUser() {
               <span className="font-medium">{currentUser?.name || 'Mahasiswa'}</span>
               <span className="text-gray-400 text-xs">{currentUser?.nim}</span>
             </div>
-            <button onClick={handleLogout} className="text-xs sm:text-sm font-medium text-red-500 hover:text-red-700 border border-red-200 px-2.5 sm:px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-1.5 cursor-pointer">
+            <button onClick={() => setIsLogoutModalOpen(true)} className="text-xs sm:text-sm font-medium text-red-500 hover:text-red-700 border border-red-200 px-2.5 sm:px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-1.5 cursor-pointer">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
               </svg>
@@ -219,7 +290,13 @@ export default function DashboardUser() {
                 <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full font-semibold">{countTotal} laporan</span>
               </div>
               
-              {myLaporan.length === 0 ? (
+              {isLoading ? (
+                <div className="p-4 sm:p-6 space-y-4">
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </div>
+              ) : myLaporan.length === 0 ? (
                 <div className="py-12 sm:py-16 text-center">
                   <div className="text-4xl mb-3">📭</div>
                   <p className="font-semibold text-gray-700">Belum ada laporan</p>
@@ -253,9 +330,25 @@ export default function DashboardUser() {
                             <span><span className="text-gray-400 font-medium">Tanggal:</span> {formatTanggal(l.tanggal)}</span>
                           </div>
                         </div>
-                        <div className="bg-gray-50 rounded-lg px-3 py-2">
+                        <div className="bg-gray-50 rounded-lg px-3 py-2 mb-2">
                           <p className="text-xs text-gray-500 leading-relaxed">{l.deskripsi}</p>
                         </div>
+
+                        {l.foto && (
+                          <div className="mt-2.5 mb-2">
+                            <img
+                              src={l.foto}
+                              alt="Bukti Laporan"
+                              className="max-h-32 sm:max-h-40 rounded-xl border border-gray-100 object-cover cursor-zoom-in hover:opacity-95 transition-opacity"
+                              onClick={() => {
+                                const w = window.open();
+                                if (w) {
+                                  w.document.write(`<title>Bukti Foto LaporMercu</title><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${l.foto}" style="max-width:100%;max-height:100vh;object-fit:contain;"/></body>`);
+                                }
+                              }}
+                            />
+                          </div>
+                        )}
                         
                         {/* Rating feedback section */}
                         {l.status === 'Selesai' && (
@@ -375,13 +468,46 @@ export default function DashboardUser() {
                   <label className="block text-sm font-semibold text-gray-700 mb-1.5">Foto Bukti (opsional)</label>
                   <div
                     onClick={() => document.getElementById('fotoInput')?.click()}
-                    className={`border-2 border-dashed rounded-xl p-5 sm:p-6 text-center cursor-pointer hover:border-blue-300 transition-all ${fotoUploaded ? 'border-blue-300 bg-blue-50' : 'border-gray-200 hover:bg-blue-50/50'}`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 relative group overflow-hidden ${
+                      isDragging
+                        ? 'border-blue-500 bg-blue-50/70 scale-[0.99]'
+                        : fotoPreview
+                        ? 'border-blue-400 bg-blue-50/10'
+                        : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50/20'
+                    }`}
                   >
-                    <svg className="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    <p className="text-sm text-gray-400">{fotoName}</p>
-                    <p className="text-xs text-gray-300 mt-1">JPG, PNG, max 5MB</p>
+                    {fotoPreview ? (
+                      <div className="relative flex flex-col items-center justify-center py-2">
+                        <img 
+                          src={fotoPreview} 
+                          alt="Pratinjau foto" 
+                          className="max-h-48 rounded-xl object-contain shadow-md border border-gray-100 mb-3"
+                        />
+                        <div className="flex items-center gap-2 text-xs font-semibold text-gray-500">
+                          <FileImage className="w-4 h-4 text-blue-500" />
+                          <span className="truncate max-w-[200px]">{fotoName}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={removeFoto}
+                          className="absolute top-0 right-0 p-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full transition-colors shadow-lg cursor-pointer"
+                          title="Hapus foto"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="py-2">
+                        <UploadCloud className={`w-10 h-10 mx-auto mb-2.5 transition-transform duration-300 ${isDragging ? 'scale-110 text-blue-500' : 'text-gray-400 group-hover:text-blue-500'}`} />
+                        <p className="text-sm font-semibold text-gray-600 mb-1">
+                          Tarik & lepas gambar di sini, atau <span className="text-blue-600 hover:underline">klik untuk memilih</span>
+                        </p>
+                        <p className="text-xs text-gray-400">Mendukung format JPG, PNG (Maksimal 2MB)</p>
+                      </div>
+                    )}
                   </div>
                   <input
                     id="fotoInput"
@@ -465,6 +591,18 @@ export default function DashboardUser() {
           </div>
         </div>
       </div>
+
+      {/* Modal Logout */}
+      <Modal
+        isOpen={isLogoutModalOpen}
+        title="Konfirmasi Keluar"
+        message="Apakah Anda yakin ingin keluar dari sesi mahasiswa ini?"
+        confirmLabel="Keluar"
+        cancelLabel="Batal"
+        onConfirm={handleLogout}
+        onCancel={() => setIsLogoutModalOpen(false)}
+        type="warning"
+      />
     </div>
   );
 }
