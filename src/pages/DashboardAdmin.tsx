@@ -15,6 +15,7 @@ export default function DashboardAdmin() {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [filterKategori, setFilterKategori] = useState('');
+  const [filterProdi, setFilterProdi] = useState('');
 
   // Selected Detail & Modals
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -50,7 +51,7 @@ export default function DashboardAdmin() {
       setIsLoading(false);
     }, 700);
     return () => clearTimeout(timer);
-  }, [filterStatus, filterKategori, search]);
+  }, [filterStatus, filterKategori, filterProdi, search]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('loggedUser');
@@ -104,6 +105,8 @@ export default function DashboardAdmin() {
         { date: '06-14', value: 2 }
       ];
 
+  const uniqueProdi = Array.from(new Set(laporanList.map(l => l.prodi).filter(Boolean)));
+
   const filteredLaporan = laporanList.filter(l => {
     const matchSearch =
       !search ||
@@ -114,8 +117,9 @@ export default function DashboardAdmin() {
     
     const matchStatus = !filterStatus || l.status === filterStatus;
     const matchKategori = !filterKategori || (l.kategori && l.kategori.split(', ').includes(filterKategori));
+    const matchProdi = !filterProdi || l.prodi === filterProdi;
 
-    return matchSearch && matchStatus && matchKategori;
+    return matchSearch && matchStatus && matchKategori && matchProdi;
   });
 
   const selectedReport = laporanList.find(x => x.id === selectedId);
@@ -279,7 +283,7 @@ export default function DashboardAdmin() {
                     className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 w-full sm:w-52"
                   />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {/* Filter status */}
                   <select
                     value={filterStatus}
@@ -305,6 +309,17 @@ export default function DashboardAdmin() {
                     <option value="Laboratorium">Laboratorium</option>
                     <option value="Perpustakaan">Perpustakaan</option>
                     <option value="Wifi">Wifi</option>
+                  </select>
+                  {/* Filter prodi */}
+                  <select
+                    value={filterProdi}
+                    onChange={(e) => setFilterProdi(e.target.value)}
+                    className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 bg-white"
+                  >
+                    <option value="">Semua Prodi</option>
+                    {uniqueProdi.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
                   </select>
                 </div>
               </div>
