@@ -112,7 +112,7 @@ export default function DashboardUser() {
   
   // Calculate counts
   const countTotal = myLaporan.length;
-  const countProses = myLaporan.filter(l => l.status === 'Diproses').length;
+  const countProses = myLaporan.filter(l => l.status === 'Sedang Diproses').length;
   const countSelesai = myLaporan.filter(l => l.status === 'Selesai').length;
 
   // Search, filter, and sort logic
@@ -232,7 +232,7 @@ export default function DashboardUser() {
       lokasi: lokasi.trim(),
       deskripsi: deskripsi.trim(),
       tanggal: getTodayDate(),
-      status: 'Baru',
+      status: 'Belum Diproses',
       foto: fotoBase64 || undefined
     };
 
@@ -500,7 +500,7 @@ export default function DashboardUser() {
               <Clock className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Diproses</p>
+              <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Sedang Diproses</p>
               <h2 className="text-xl sm:text-2xl font-black text-amber-600 leading-none mt-0.5">{countProses}</h2>
             </div>
           </div>
@@ -540,7 +540,7 @@ export default function DashboardUser() {
               {/* Status Filters & Sort */}
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex items-center bg-slate-50 border border-slate-100 p-0.5 rounded-xl text-xs font-bold">
-                  {['All', 'Baru', 'Diproses', 'Selesai'].map((status) => (
+                  {['All', 'Belum Diproses', 'Sedang Diproses', 'Selesai'].map((status) => (
                     <button
                       key={status}
                       onClick={() => setStatusFilter(status)}
@@ -598,14 +598,14 @@ export default function DashboardUser() {
                   const isExpanded = expandedReportId === l.id;
                   
                   // Status styles
-                  let statusBg = 'bg-rose-50 text-rose-600 border-rose-100';
-                  let statusDot = 'bg-rose-500';
-                  if (l.status === 'Diproses') {
-                    statusBg = 'bg-amber-50 text-amber-600 border-amber-100';
-                    statusDot = 'bg-amber-500';
+                  let statusBg = 'bg-red-50 text-red-600 border-red-100';
+                  let statusDot = 'bg-red-500';
+                  if (l.status === 'Sedang Diproses') {
+                    statusBg = 'bg-yellow-50 text-yellow-600 border-yellow-100';
+                    statusDot = 'bg-yellow-500';
                   } else if (l.status === 'Selesai') {
-                    statusBg = 'bg-emerald-50 text-emerald-600 border-emerald-100';
-                    statusDot = 'bg-emerald-500';
+                    statusBg = 'bg-green-50 text-green-600 border-green-100';
+                    statusDot = 'bg-green-500';
                   }
 
                   return (

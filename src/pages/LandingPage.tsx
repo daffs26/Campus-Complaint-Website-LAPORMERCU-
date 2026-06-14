@@ -15,7 +15,7 @@ export default function LandingPage() {
     const list = getLaporan();
     const total = list.length;
     const selesai = list.filter(l => l.status === 'Selesai').length;
-    const proses = list.filter(l => l.status === 'Diproses').length;
+    const proses = list.filter(l => l.status === 'Sedang Diproses').length;
     
     // Hitung rata-rata rating dari yang bernilai rating
     const rated = list.filter(l => l.rating !== undefined && l.rating > 0);
@@ -147,7 +147,7 @@ export default function LandingPage() {
                         <p className="text-xs font-medium text-gray-700 truncate">AC Rusak - Lab Komputer</p>
                         <p className="text-xs text-gray-400">Laboratorium</p>
                       </div>
-                      <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Diproses</span>
+                      <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Sedang Diproses</span>
                     </div>
                     <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
                       <div className="w-2 h-2 bg-red-400 rounded-full"></div>
@@ -155,7 +155,7 @@ export default function LandingPage() {
                         <p className="text-xs font-medium text-gray-700 truncate">Toilet Mampet Lt.2</p>
                         <p className="text-xs text-gray-400">Toilet</p>
                       </div>
-                      <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Baru</span>
+                      <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Belum Diproses</span>
                     </div>
                     <div className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
                       <div className="w-2 h-2 bg-green-400 rounded-full"></div>
@@ -186,7 +186,7 @@ export default function LandingPage() {
           <div className="stats-marquee-track">
             <div className="stats-marquee-item"><span className="stats-number">{stats.total}</span><span className="stats-label">Total Laporan</span></div>
             <div className="stats-marquee-divider">✦</div>
-            <div className="stats-marquee-item"><span className="stats-number">{stats.selesai}</span><span className="stats-label">Laporan Selesai</span></div>
+            <div className="stats-marquee-item"><span className="stats-number">{stats.selesai}</span><span className="stats-label">Selesai</span></div>
             <div className="stats-marquee-divider">✦</div>
             <div className="stats-marquee-item"><span className="stats-number">{stats.proses}</span><span className="stats-label">Sedang Diproses</span></div>
             <div className="stats-marquee-divider">✦</div>
@@ -197,7 +197,7 @@ export default function LandingPage() {
           <div className="stats-marquee-track" aria-hidden="true">
             <div className="stats-marquee-item"><span className="stats-number">{stats.total}</span><span className="stats-label">Total Laporan</span></div>
             <div className="stats-marquee-divider">✦</div>
-            <div className="stats-marquee-item"><span className="stats-number">{stats.selesai}</span><span className="stats-label">Laporan Selesai</span></div>
+            <div className="stats-marquee-item"><span className="stats-number">{stats.selesai}</span><span className="stats-label">Selesai</span></div>
             <div className="stats-marquee-divider">✦</div>
             <div className="stats-marquee-item"><span className="stats-number">{stats.proses}</span><span className="stats-label">Sedang Diproses</span></div>
             <div className="stats-marquee-divider">✦</div>
@@ -222,8 +222,8 @@ export default function LandingPage() {
                 </svg>
               </div>
               <div className="text-xs font-bold text-blue-500 mb-1">LANGKAH 1</div>
-              <h3 className="font-bold text-gray-800 mb-2">Login dengan NIM</h3>
-              <p className="text-sm text-gray-500">Masuk menggunakan NIM dan password kamu</p>
+              <h3 className="font-bold text-gray-800 mb-2">Login Akun</h3>
+              <p className="text-sm text-gray-500">Masuk menggunakan username dan password kamu</p>
             </div>
             <div className="card-hover bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 shadow-sm text-center">
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">

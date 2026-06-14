@@ -1,44 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { authenticateUser } from '../auth';
 
 export default function LoginUser() {
-  const [nim, setNim] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
-  const USERS = [
-    { nim: '2024001', password: 'mahasiswa123', name: 'Daffa', prodi: 'Sistem Informasi' },
-    { nim: '2024002', password: 'mahasiswa123', name: 'Daffa Aulia', prodi: 'Sistem Informasi' },
-    { nim: '2024003', password: 'mahasiswa123', name: 'Ahmad', prodi: 'Teknik Informatika' },
-    { nim: '2024004', password: 'mahasiswa123', name: 'Budi', prodi: 'Teknik Mesin' },
-    { nim: '2024005', password: 'mahasiswa123', name: 'Citra', prodi: 'Manajemen' },
-    { nim: '2024006', password: 'mahasiswa123', name: 'Diana', prodi: 'Desain Komunikasi Visual' },
-  ];
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanNim = nim.trim();
-    if (!cleanNim || !password) {
-      setErrorMsg('NIM dan password tidak boleh kosong.');
+    if (!username.trim() || !password) {
+      setErrorMsg('Username dan password tidak boleh kosong.');
       return;
     }
 
-    const user = USERS.find(u => u.nim === cleanNim && u.password === password);
+    const user = authenticateUser(username, password);
     if (user) {
-      sessionStorage.setItem('loggedUser', JSON.stringify({ role: 'user', ...user }));
+      sessionStorage.setItem('loggedUser', JSON.stringify(user));
       navigate('/dashboard');
     } else {
-      setErrorMsg('NIM atau password salah. Silakan coba lagi.');
+      setErrorMsg('Username atau password salah. Silakan coba lagi.');
     }
-  };
-
-
-  const handleQuickLogin = () => {
-    const demoUser = USERS[0];
-    sessionStorage.setItem('loggedUser', JSON.stringify({ role: 'user', ...demoUser }));
-    navigate('/dashboard');
   };
 
   return (
@@ -55,7 +39,7 @@ export default function LoginUser() {
             <span className="font-extrabold text-xl text-blue-700 font-jakarta">#LAPORMERCU</span>
           </Link>
           <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 font-jakarta">Login Mahasiswa</h1>
-          <p className="text-gray-500 text-sm mt-1">Masuk menggunakan NIM dan password kamu</p>
+          <p className="text-gray-500 text-sm mt-1">Masuk menggunakan username dan password kamu</p>
         </div>
 
         {/* Card */}
@@ -71,22 +55,21 @@ export default function LoginUser() {
           )}
 
           <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
-            {/* NIM */}
+            {/* Username */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">NIM</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Username</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                   <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
                 </div>
                 <input
-                  id="nim"
+                  id="username"
                   type="text"
-                  placeholder="Masukkan NIM kamu"
-                  maxLength={12}
-                  value={nim}
-                  onChange={(e) => setNim(e.target.value)}
+                  placeholder="Masukkan username kamu"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="input-field w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 bg-gray-50 focus:bg-white"
                 />
               </div>
@@ -130,20 +113,6 @@ export default function LoginUser() {
               Masuk
             </button>
           </form>
-
-          {/* Quick Login */}
-          <div className="mt-5">
-            <button
-              type="button"
-              onClick={handleQuickLogin}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-              Masuk Instan
-            </button>
-          </div>
         </div>
 
         {/* Link ke admin */}

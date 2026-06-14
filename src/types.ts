@@ -16,7 +16,7 @@ export interface Laporan {
   lokasi: string;
   deskripsi: string;
   tanggal: string;
-  status: 'Baru' | 'Diproses' | 'Selesai';
+  status: 'Belum Diproses' | 'Sedang Diproses' | 'Selesai';
   rating?: number;
   feedback?: string;
   foto?: string;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { authenticateAdmin } from '../auth';
 
 export default function LoginAdmin() {
   const [username, setUsername] = useState('');
@@ -8,32 +9,20 @@ export default function LoginAdmin() {
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
-  const ADMINS = [
-    { username: 'admin', password: 'admin123', name: 'Administrator' },
-  ];
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanUser = username.trim();
-    if (!cleanUser || !password) {
+    if (!username.trim() || !password) {
       setErrorMsg('Username dan password tidak boleh kosong.');
       return;
     }
 
-    const admin = ADMINS.find(a => a.username === cleanUser && a.password === password);
+    const admin = authenticateAdmin(username, password);
     if (admin) {
-      sessionStorage.setItem('loggedUser', JSON.stringify({ role: 'admin', ...admin }));
+      sessionStorage.setItem('loggedUser', JSON.stringify(admin));
       navigate('/admin');
     } else {
       setErrorMsg('Username atau password salah.');
     }
-  };
-
-
-  const handleQuickLogin = () => {
-    const demoAdmin = ADMINS[0];
-    sessionStorage.setItem('loggedUser', JSON.stringify({ role: 'admin', ...demoAdmin }));
-    navigate('/admin');
   };
 
   return (
@@ -128,20 +117,6 @@ export default function LoginAdmin() {
               Masuk sebagai Admin
             </button>
           </form>
-
-          {/* Quick Login */}
-          <div className="mt-4">
-            <button
-              type="button"
-              onClick={handleQuickLogin}
-              className="w-full bg-white hover:bg-blue-50 text-blue-900 font-bold py-3 px-4 rounded-xl text-sm transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] duration-150"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-              Masuk Instan
-            </button>
-          </div>
         </div>
 
         {/* Footer links */}

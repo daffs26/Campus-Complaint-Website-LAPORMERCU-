@@ -61,8 +61,8 @@ export default function DashboardAdmin() {
   };
 
   const countTotal = laporanList.length;
-  const countBaru = laporanList.filter(l => l.status === 'Baru').length;
-  const countProses = laporanList.filter(l => l.status === 'Diproses').length;
+  const countBaru = laporanList.filter(l => l.status === 'Belum Diproses').length;
+  const countProses = laporanList.filter(l => l.status === 'Sedang Diproses').length;
   const countSelesai = laporanList.filter(l => l.status === 'Selesai').length;
 
   // Distribusi kategori untuk Pie Chart
@@ -139,7 +139,7 @@ export default function DashboardAdmin() {
 
   const selectedReport = laporanList.find(x => x.id === selectedId);
 
-  const ubahStatus = (newStatus: 'Baru' | 'Diproses' | 'Selesai') => {
+  const ubahStatus = (newStatus: 'Belum Diproses' | 'Sedang Diproses' | 'Selesai') => {
     if (!selectedId) return;
     const updatedList = laporanList.map(l => {
       if (l.id === selectedId) {
@@ -163,15 +163,15 @@ export default function DashboardAdmin() {
     setSelectedId(null);
   };
 
-  const renderStatusBadge = (status: 'Baru' | 'Diproses' | 'Selesai') => {
+  const renderStatusBadge = (status: 'Belum Diproses' | 'Sedang Diproses' | 'Selesai') => {
     const map = {
-      'Baru': {
+      'Belum Diproses': {
         bg: 'bg-red-50/70 text-red-700 border-red-100/80',
         dot: 'bg-red-500'
       },
-      'Diproses': {
-        bg: 'bg-amber-50/70 text-amber-700 border-amber-100/80',
-        dot: 'bg-amber-500'
+      'Sedang Diproses': {
+        bg: 'bg-yellow-50/70 text-yellow-700 border-yellow-100/80',
+        dot: 'bg-yellow-500'
       },
       'Selesai': {
         bg: 'bg-green-50/70 text-green-700 border-green-100/80',
@@ -246,7 +246,7 @@ export default function DashboardAdmin() {
           <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100/80 shadow-sm p-4 sm:p-5 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-red-500 rounded-t-xl sm:rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Baru</span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Belum Diproses</span>
               <div className="w-9 h-9 bg-red-50/70 text-red-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
@@ -254,13 +254,13 @@ export default function DashboardAdmin() {
               </div>
             </div>
             <div className="text-2xl sm:text-3.5xl font-extrabold text-red-500 font-jakarta leading-none">{countBaru}</div>
-            <div className="text-[11px] text-gray-400 mt-1.5 font-medium">Menunggu tanggapan</div>
+            <div className="text-[11px] text-gray-400 mt-1.5 font-medium">Menunggu ditanggapi</div>
           </div>
 
           <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100/80 shadow-sm p-4 sm:p-5 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-amber-500 rounded-t-xl sm:rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Proses</span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Sedang Diproses</span>
               <div className="w-9 h-9 bg-amber-50/70 text-amber-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -345,8 +345,8 @@ export default function DashboardAdmin() {
                       <div className="absolute right-0 sm:left-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-1.5 focus:outline-none animate-in fade-in slide-in-from-top-1 duration-150">
                         {[
                           { value: '', label: 'Semua Status' },
-                          { value: 'Baru', label: 'Baru' },
-                          { value: 'Diproses', label: 'Diproses' },
+                          { value: 'Belum Diproses', label: 'Belum Diproses' },
+                          { value: 'Sedang Diproses', label: 'Sedang Diproses' },
                           { value: 'Selesai', label: 'Selesai' }
                         ].map((opt) => (
                           <button
@@ -683,11 +683,11 @@ export default function DashboardAdmin() {
               <div className="pt-4 border-t border-gray-100">
                 <p className="text-sm font-semibold text-gray-700 mb-2 font-jakarta">Ubah Status Laporan:</p>
                 <div className="flex flex-wrap gap-2">
-                  {(['Baru', 'Diproses', 'Selesai'] as const).map(s => {
+                  {(['Belum Diproses', 'Sedang Diproses', 'Selesai'] as const).map(s => {
                     const isActive = selectedReport.status === s;
                     const stylesMap = {
-                      'Baru': isActive ? 'bg-red-500 text-white border-red-500' : 'bg-red-50 text-red-500 border-red-100 hover:bg-red-100',
-                      'Diproses': isActive ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-yellow-50 text-yellow-600 border-yellow-100 hover:bg-yellow-100',
+                      'Belum Diproses': isActive ? 'bg-red-500 text-white border-red-500' : 'bg-red-50 text-red-500 border-red-100 hover:bg-red-100',
+                      'Sedang Diproses': isActive ? 'bg-yellow-500 text-white border-yellow-500' : 'bg-yellow-50 text-yellow-600 border-yellow-100 hover:bg-yellow-100',
                       'Selesai': isActive ? 'bg-green-500 text-white border-green-500' : 'bg-green-50 text-green-600 border-green-100 hover:bg-green-100',
                     };
                     return (
