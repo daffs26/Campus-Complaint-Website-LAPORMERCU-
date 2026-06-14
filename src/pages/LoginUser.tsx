@@ -11,6 +11,10 @@ export default function LoginUser() {
   const USERS = [
     { nim: '2024001', password: 'mahasiswa123', name: 'Daffa', prodi: 'Sistem Informasi' },
     { nim: '2024002', password: 'mahasiswa123', name: 'Daffa Aulia', prodi: 'Sistem Informasi' },
+    { nim: '2024003', password: 'mahasiswa123', name: 'Ahmad', prodi: 'Teknik Informatika' },
+    { nim: '2024004', password: 'mahasiswa123', name: 'Budi', prodi: 'Teknik Mesin' },
+    { nim: '2024005', password: 'mahasiswa123', name: 'Citra', prodi: 'Manajemen' },
+    { nim: '2024006', password: 'mahasiswa123', name: 'Diana', prodi: 'Desain Komunikasi Visual' },
   ];
 
   const handleLogin = (e: React.FormEvent) => {
@@ -135,6 +139,7 @@ export default function LoginUser() {
                 <span>💡 Demo Login</span>
               </p>
               <p className="text-xs text-blue-600">NIM: <span className="font-mono font-bold">2024001</span> &nbsp;|&nbsp; Password: <span className="font-mono font-bold">mahasiswa123</span></p>
+              <p className="text-[10px] text-blue-500 mt-1">Akun lain: NIM <span className="font-bold">2024003</span> (Informatika), <span className="font-bold">2024004</span> (Mesin), <span className="font-bold">2024005</span> (Manajemen), <span className="font-bold">2024006</span> (DKV)</p>
             </div>
             {isLocal && (
               <button

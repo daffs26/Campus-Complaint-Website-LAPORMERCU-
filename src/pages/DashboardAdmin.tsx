@@ -105,7 +105,20 @@ export default function DashboardAdmin() {
         { date: '06-14', value: 2 }
       ];
 
-  const uniqueProdi = Array.from(new Set(laporanList.map(l => l.prodi).filter(Boolean)));
+  const ALL_PRODI = [
+    'Sistem Informasi',
+    'Teknik Informatika',
+    'Teknik Mesin',
+    'Teknik Industri',
+    'Teknik Elektro',
+    'Manajemen',
+    'Akuntansi',
+    'Marcom',
+    'Psikologi',
+    'Desain Produk',
+    'Desain Interior',
+    'Desain Komunikasi Visual'
+  ];
 
   const filteredLaporan = laporanList.filter(l => {
     const matchSearch =
@@ -317,7 +330,7 @@ export default function DashboardAdmin() {
                     className="flex-1 sm:flex-none px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-blue-400 bg-white"
                   >
                     <option value="">Semua Prodi</option>
-                    {uniqueProdi.map((p) => (
+                    {ALL_PRODI.map((p) => (
                       <option key={p} value={p}>{p}</option>
                     ))}
                   </select>
