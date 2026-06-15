@@ -1,4 +1,4 @@
-import type { Laporan } from './types';
+import type { Laporan, DeletedLaporan } from './types';
 
 export const DEFAULT_LAPORAN: Laporan[] = [
   { id: 1, nim: '2024001', nama: 'Muhammad Daffa Aulia Syahrul', prodi: 'Sistem Informasi', judul: 'AC Rusak Tidak Berfungsi', kategori: 'Laboratorium', lokasi: 'Lab Komputer Lt.2', deskripsi: 'AC di lab komputer sudah 3 hari tidak berfungsi, ruangan sangat panas saat siang hari.', tanggal: '2025-01-15', status: 'Sedang Diproses' },
@@ -51,4 +51,13 @@ export function formatTanggal(dateStr: string): string {
 
 export function getTodayDate(): string {
   return new Date().toISOString().split('T')[0];
+}
+
+export function getDeletedLaporan(): DeletedLaporan[] {
+  const data = localStorage.getItem('laporan_deleted_mercumb');
+  return data ? JSON.parse(data) : [];
+}
+
+export function saveDeletedLaporan(list: DeletedLaporan[]): void {
+  localStorage.setItem('laporan_deleted_mercumb', JSON.stringify(list));
 }

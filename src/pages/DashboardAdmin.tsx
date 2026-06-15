@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLaporan, saveLaporan } from '../utils';
-import type { Laporan, User } from '../types';
+import { getLaporan, saveLaporan, getDeletedLaporan, saveDeletedLaporan } from '../utils';
+import type { Laporan, User, DeletedLaporan } from '../types';
 import { useToast } from '../components/Toast';
 import Modal from '../components/Modal';
 import { TableRowSkeleton, CardSkeleton } from '../components/Skeleton';
 import { PieChart, LineChart } from '../components/Charts';
-import { ChevronDown, Search, Check, RotateCcw, Download } from 'lucide-react';
+import { ChevronDown, Search, Check, RotateCcw, Download, Trash2, History } from 'lucide-react';
 
 export default function DashboardAdmin() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [laporanList, setLaporanList] = useState<Laporan[]>([]);
+  const [deletedList, setDeletedList] = useState<DeletedLaporan[]>([]);
+  const [showDeletedModal, setShowDeletedModal] = useState(false);
   
   // Filters
   const [search, setSearch] = useState('');
@@ -99,6 +101,7 @@ export default function DashboardAdmin() {
     }
     setCurrentUser(userObj);
     setLaporanList(getLaporan());
+    setDeletedList(getDeletedLaporan());
   }, [navigate]);
 
   // Jeda loading buatan untuk saringan filter admin
@@ -238,6 +241,17 @@ export default function DashboardAdmin() {
 
   const handleDeleteLaporan = () => {
     if (!deleteTargetId) return;
+    const target = laporanList.find(l => l.id === deleteTargetId);
+    if (target && currentUser) {
+      const newDeleted: DeletedLaporan = {
+        ...target,
+        deletedAt: new Date().toISOString(),
+        deletedBy: currentUser.name
+      };
+      const updatedDeleted = [...deletedList, newDeleted];
+      saveDeletedLaporan(updatedDeleted);
+      setDeletedList(updatedDeleted);
+    }
     const updatedList = laporanList.filter(l => l.id !== deleteTargetId);
     saveLaporan(updatedList);
     setLaporanList(updatedList);
@@ -591,6 +605,17 @@ export default function DashboardAdmin() {
                     <Download className="w-3.5 h-3.5" />
                     <span>Ekspor CSV</span>
                   </button>
+
+                  {/* Riwayat Dihapus Button */}
+                  <button
+                    type="button"
+                    onClick={() => setShowDeletedModal(true)}
+                    className="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-600 hover:text-slate-700 hover:bg-slate-50 px-3 py-2.5 rounded-xl transition-all cursor-pointer border border-transparent hover:border-slate-200"
+                    title="Riwayat Laporan Dihapus"
+                  >
+                    <History className="w-3.5 h-3.5" />
+                    <span>Riwayat Hapus</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -913,6 +938,54 @@ export default function DashboardAdmin() {
         }}
         type="danger"
       />
+      {/* Modal Riwayat Penghapusan */}
+      <div className={`modal-overlay ${showDeletedModal ? 'active' : ''}`}>
+        <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-6 max-w-3xl w-full mx-4 max-h-[85vh] flex flex-col">
+          <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-3">
+            <h3 className="text-base sm:text-lg font-extrabold text-gray-900 font-jakarta flex items-center gap-2">
+              <History className="w-5 h-5 text-slate-500" />
+              Riwayat Laporan Dihapus
+            </h3>
+            <button onClick={() => setShowDeletedModal(false)} className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto min-h-[30vh]">
+            {deletedList.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-slate-400 py-12">
+                <Trash2 className="w-12 h-12 mb-3 text-slate-200" />
+                <p className="font-medium text-sm">Belum ada riwayat laporan yang dihapus</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {deletedList.slice().reverse().map((l) => (
+                  <div key={`${l.id}-${l.deletedAt}`} className="border border-slate-100 rounded-xl p-4 hover:bg-slate-50 transition-colors text-left">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-bold text-slate-800 text-sm mb-0.5">{l.judul}</h4>
+                        <p className="text-xs text-slate-500">{l.nama} ({l.nim}) • {l.prodi}</p>
+                      </div>
+                      <span className="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-1 rounded-lg">ID: #{String(l.id).padStart(3, '0')}</span>
+                    </div>
+                    <div className="bg-red-50/50 border border-red-100/50 rounded-lg p-3 mt-3 flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center shrink-0">
+                        <Trash2 className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-[11px] font-bold text-slate-700">Dihapus oleh <span className="text-red-600">{l.deletedBy}</span></p>
+                        <p className="text-[10px] text-slate-500 mt-0.5">{new Date(l.deletedAt).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

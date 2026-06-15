@@ -29,3 +29,8 @@ export interface Laporan {
   tanggapan?: string;
   history?: TimelineHistory[];
 }
+
+export interface DeletedLaporan extends Laporan {
+  deletedAt: string;
+  deletedBy: string;
+}

@@ -1,0 +1,22 @@
+---
+description: Push changes to GitHub and deploy to Vercel after code updates
+alwaysApply: true
+---
+
+# Deploy ke GitHub & Vercel
+
+Setelah selesai mengubah kode di proyek ini, **selalu** lakukan:
+
+1. **Commit & push ke GitHub**
+   - Remote: `https://github.com/daffs26/Campus-Complaint-Website-LAPORMERCU-.git`
+   - Branch: `main`
+   - Jangan commit: `.vercel/`, `.vercel-tmp/`, `node_modules/`, `dist/`, file rahasia (`.env`)
+   - Buat commit hanya jika user meminta deploy/update atau implisit minta push
+
+2. **Deploy ke Vercel (production)**
+   - Jalankan dari root proyek: `vercel --prod --yes`
+   - Proyek sudah ter-link: `website-pengaduan-fasilitas-kampus-coba`
+
+3. **Verifikasi**
+   - Pastikan `npm run build` sukses sebelum deploy
+   - Laporkan URL production Vercel dan status push GitHub ke user
