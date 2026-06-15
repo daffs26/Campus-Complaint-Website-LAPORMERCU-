@@ -306,7 +306,14 @@ export default function LandingPage() {
               <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 text-lg">📚</div>
               <div className="min-w-0">
                 <h3 className="font-semibold text-gray-800 text-sm sm:text-base">Perpustakaan</h3>
-                <p className="text-xs text-gray-400 mt-0.5">Buku, ruang baca, wifi</p>
+                <p className="text-xs text-gray-400 mt-0.5">Fasilitas baca, AC perpustakaan mati, AC rusak</p>
+              </div>
+            </div>
+            <div className="card-hover bg-white border border-gray-100 rounded-2xl p-4 sm:p-5 shadow-sm flex items-center gap-4">
+              <div className="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 text-lg">📶</div>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-gray-800 text-sm sm:text-base">Wifi</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Koneksi internet lambat, mati, susah tersambung</p>
               </div>
             </div>
           </div>
