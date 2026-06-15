@@ -6,7 +6,7 @@ import { useToast } from '../components/Toast';
 import Modal from '../components/Modal';
 import { TableRowSkeleton, CardSkeleton } from '../components/Skeleton';
 import { PieChart, LineChart } from '../components/Charts';
-import { ChevronDown, Search, Check, RotateCcw } from 'lucide-react';
+import { ChevronDown, Search, Check, RotateCcw, Download } from 'lucide-react';
 
 export default function DashboardAdmin() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -30,6 +30,61 @@ export default function DashboardAdmin() {
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
+
+  const [tanggapanInput, setTanggapanInput] = useState('');
+
+  useEffect(() => {
+    if (selectedId) {
+      const r = laporanList.find(x => x.id === selectedId);
+      setTanggapanInput(r?.tanggapan || '');
+    } else {
+      setTanggapanInput('');
+    }
+  }, [selectedId, laporanList]);
+
+  const isReportUrgent = (tanggal: string, status: string) => {
+    if (status !== 'Belum Diproses') return false;
+    try {
+      const today = new Date();
+      const reportDate = new Date(tanggal);
+      const diffTime = today.getTime() - reportDate.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays > 2;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const handleExportCSV = () => {
+    if (filteredLaporan.length === 0) {
+      showToast('Tidak ada data untuk diekspor', 'error');
+      return;
+    }
+    const headers = ['ID', 'NIM', 'Nama', 'Prodi', 'Judul', 'Kategori', 'Lokasi', 'Tanggal', 'Status', 'Tanggapan'];
+    const rows = filteredLaporan.map(l => [
+      `#${String(l.id).padStart(3, '0')}`,
+      l.nim,
+      `"${l.nama.replace(/"/g, '""')}"`,
+      l.prodi,
+      `"${l.judul.replace(/"/g, '""')}"`,
+      l.kategori,
+      `"${l.lokasi.replace(/"/g, '""')}"`,
+      l.tanggal,
+      l.status,
+      `"${(l.tanggapan || '').replace(/"/g, '""')}"`
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `LaporMercu_Ekspor_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Data berhasil diekspor ke CSV!', 'success');
+  };
 
   useEffect(() => {
     const sessionUser = sessionStorage.getItem('loggedUser');
@@ -143,13 +198,42 @@ export default function DashboardAdmin() {
     if (!selectedId) return;
     const updatedList = laporanList.map(l => {
       if (l.id === selectedId) {
-        return { ...l, status: newStatus };
+        const historyEntry = {
+          status: newStatus,
+          tanggal: new Date().toISOString().split('T')[0],
+          catatan: tanggapanInput.trim() || undefined
+        };
+        const currentHistory = l.history || [
+          { status: 'Belum Diproses', tanggal: l.tanggal }
+        ];
+        return { 
+          ...l, 
+          status: newStatus,
+          tanggapan: tanggapanInput.trim() || undefined,
+          history: [...currentHistory, historyEntry]
+        };
       }
       return l;
     });
     saveLaporan(updatedList);
     setLaporanList(updatedList);
-    showToast(`Status laporan berhasil diubah ke: ${newStatus}`, 'success');
+    showToast(`Status laporan berhasil diubah ke: ${newStatus === 'Belum Diproses' ? 'Baru' : newStatus === 'Sedang Diproses' ? 'Diproses' : 'Selesai'}`, 'success');
+  };
+
+  const simpanTanggapan = () => {
+    if (!selectedId) return;
+    const updatedList = laporanList.map(l => {
+      if (l.id === selectedId) {
+        return {
+          ...l,
+          tanggapan: tanggapanInput.trim() || undefined
+        };
+      }
+      return l;
+    });
+    saveLaporan(updatedList);
+    setLaporanList(updatedList);
+    showToast('Tanggapan berhasil disimpan!', 'success');
   };
 
   const handleDeleteLaporan = () => {
@@ -167,22 +251,25 @@ export default function DashboardAdmin() {
     const map = {
       'Belum Diproses': {
         bg: 'bg-red-50/70 text-red-700 border-red-100/80',
-        dot: 'bg-red-500'
+        dot: 'bg-red-500',
+        label: 'Baru'
       },
       'Sedang Diproses': {
         bg: 'bg-yellow-50/70 text-yellow-700 border-yellow-100/80',
-        dot: 'bg-yellow-500'
+        dot: 'bg-yellow-500',
+        label: 'Diproses'
       },
       'Selesai': {
         bg: 'bg-green-50/70 text-green-700 border-green-100/80',
-        dot: 'bg-green-500'
+        dot: 'bg-green-500',
+        label: 'Selesai'
       }
     };
-    const style = map[status] || { bg: 'bg-gray-50 text-gray-700 border-gray-100', dot: 'bg-gray-500' };
+    const style = map[status] || { bg: 'bg-gray-50 text-gray-700 border-gray-100', dot: 'bg-gray-500', label: status };
     return (
       <span className={`inline-flex items-center gap-1.5 text-[10px] font-extrabold px-2.5 py-1 rounded-full border whitespace-nowrap ${style.bg}`}>
         <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
-        {status}
+        {style.label}
       </span>
     );
   };
@@ -337,7 +424,7 @@ export default function DashboardAdmin() {
                           : 'border-slate-100 bg-slate-50 text-slate-700 hover:border-slate-200 hover:bg-slate-100/30'
                       }`}
                     >
-                      <span>{filterStatus ? `Status: ${filterStatus}` : 'Semua Status'}</span>
+                      <span>{filterStatus ? `Status: ${filterStatus === 'Belum Diproses' ? 'Baru' : filterStatus === 'Sedang Diproses' ? 'Diproses' : 'Selesai'}` : 'Semua Status'}</span>
                       <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${activeDropdown === 'status' ? 'rotate-180' : ''}`} />
                     </button>
 
@@ -345,8 +432,8 @@ export default function DashboardAdmin() {
                       <div className="absolute right-0 sm:left-0 mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-xl z-50 py-1.5 focus:outline-none animate-in fade-in slide-in-from-top-1 duration-150">
                         {[
                           { value: '', label: 'Semua Status' },
-                          { value: 'Belum Diproses', label: 'Belum Diproses' },
-                          { value: 'Sedang Diproses', label: 'Sedang Diproses' },
+                          { value: 'Belum Diproses', label: 'Baru' },
+                          { value: 'Sedang Diproses', label: 'Diproses' },
                           { value: 'Selesai', label: 'Selesai' }
                         ].map((opt) => (
                           <button
@@ -493,6 +580,17 @@ export default function DashboardAdmin() {
                       <span>Reset</span>
                     </button>
                   )}
+
+                  {/* Export CSV Button */}
+                  <button
+                    type="button"
+                    onClick={handleExportCSV}
+                    className="flex items-center gap-1.5 text-[11px] font-extrabold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 px-3 py-2.5 rounded-xl transition-all cursor-pointer border border-transparent hover:border-emerald-100/50"
+                    title="Ekspor ke CSV"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Ekspor CSV</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -566,7 +664,16 @@ export default function DashboardAdmin() {
                         </td>
                         <td className="px-4 sm:px-6 py-3 hidden md:table-cell text-gray-600 text-[13px]">{l.kategori}</td>
                         <td className="px-4 sm:px-6 py-3 hidden lg:table-cell text-gray-400 text-xs">{l.tanggal}</td>
-                        <td className="px-4 sm:px-6 py-3">{renderStatusBadge(l.status)}</td>
+                        <td className="px-4 sm:px-6 py-3">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1.5">
+                            {renderStatusBadge(l.status)}
+                            {isReportUrgent(l.tanggal, l.status) && (
+                              <span className="inline-flex items-center gap-1 text-[9px] font-black px-2 py-0.5 bg-red-100 text-red-700 border border-red-200/50 rounded-full uppercase tracking-wider animate-pulse whitespace-nowrap">
+                                🚨 Urgent
+                              </span>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-4 sm:px-6 py-3">
                           <span className="text-blue-600 text-xs font-semibold hover:underline">Detail →</span>
                         </td>
@@ -643,6 +750,63 @@ export default function DashboardAdmin() {
                 <p className="text-sm text-gray-700 leading-relaxed bg-gray-50/50 p-3 rounded-xl border border-gray-100 mt-1">
                   {selectedReport.deskripsi}
                 </p>
+              </div>
+
+              {/* Timeline Riwayat */}
+              <div className="pt-4 border-t border-gray-100">
+                <p className="text-xs text-gray-400 font-extrabold uppercase tracking-widest mb-3">Timeline Progres Laporan</p>
+                <div className="relative border-l-2 border-slate-100 ml-2.5 pl-4 space-y-4">
+                  {(selectedReport.history || [
+                    { status: 'Belum Diproses', tanggal: selectedReport.tanggal }
+                  ]).map((h, i) => {
+                    const statusColorMap = {
+                      'Belum Diproses': 'bg-red-500 ring-red-100',
+                      'Sedang Diproses': 'bg-amber-500 ring-amber-100',
+                      'Selesai': 'bg-green-500 ring-green-100'
+                    };
+                    const colorClass = statusColorMap[h.status] || 'bg-gray-500 ring-gray-100';
+                    return (
+                      <div key={i} className="relative">
+                        {/* Dot indicator */}
+                        <div className={`absolute -left-[21px] top-1 w-2 h-2 rounded-full ring-4 ${colorClass}`} />
+                        <div>
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-xs font-bold text-slate-800">
+                              {h.status === 'Belum Diproses' ? 'Baru' : h.status === 'Sedang Diproses' ? 'Diproses' : 'Selesai'}
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-medium">{h.tanggal}</span>
+                          </div>
+                          {h.catatan && (
+                            <p className="text-[11px] text-slate-500 italic mt-0.5 leading-relaxed">
+                              "{h.catatan}"
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Input Tanggapan Admin */}
+              <div className="pt-4 border-t border-gray-100">
+                <label className="text-xs text-gray-400 font-extrabold uppercase tracking-widest block mb-1.5">Tanggapan / Catatan Tindakan</label>
+                <textarea
+                  rows={3}
+                  value={tanggapanInput}
+                  onChange={(e) => setTanggapanInput(e.target.value)}
+                  placeholder="Ketik detail tanggapan atau tindakan perbaikan di sini..."
+                  className="w-full p-3 border border-gray-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-blue-400 bg-gray-50/50 focus:bg-white resize-none"
+                />
+                <div className="flex justify-end mt-1.5">
+                  <button
+                    type="button"
+                    onClick={simpanTanggapan}
+                    className="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-100/50 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  >
+                    Simpan Catatan
+                  </button>
+                </div>
               </div>
 
               {/* Umpan balik rating dari mahasiswa (jika ada) */}

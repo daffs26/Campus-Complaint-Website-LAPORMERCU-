@@ -6,6 +6,12 @@ export interface User {
   role: 'user' | 'admin';
 }
 
+export interface TimelineHistory {
+  status: 'Belum Diproses' | 'Sedang Diproses' | 'Selesai';
+  tanggal: string;
+  catatan?: string;
+}
+
 export interface Laporan {
   id: number;
   nim: string;
@@ -20,4 +26,6 @@ export interface Laporan {
   rating?: number;
   feedback?: string;
   foto?: string;
+  tanggapan?: string;
+  history?: TimelineHistory[];
 }

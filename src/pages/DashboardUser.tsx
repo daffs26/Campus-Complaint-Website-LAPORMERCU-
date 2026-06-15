@@ -233,7 +233,8 @@ export default function DashboardUser() {
       deskripsi: deskripsi.trim(),
       tanggal: getTodayDate(),
       status: 'Belum Diproses',
-      foto: fotoBase64 || undefined
+      foto: fotoBase64 || undefined,
+      history: [{ status: 'Belum Diproses', tanggal: getTodayDate() }]
     };
 
     const updatedList = [...allReports, newReport];
@@ -550,7 +551,13 @@ export default function DashboardUser() {
                           : 'text-slate-500 hover:text-slate-800'
                       }`}
                     >
-                      {status === 'All' ? 'Semua' : status}
+                      {status === 'All' 
+                        ? 'Semua' 
+                        : status === 'Belum Diproses' 
+                        ? 'Baru' 
+                        : status === 'Sedang Diproses' 
+                        ? 'Diproses' 
+                        : 'Selesai'}
                     </button>
                   ))}
                 </div>
@@ -624,7 +631,7 @@ export default function DashboardUser() {
                           <div className="flex flex-wrap items-center gap-2.5 mb-2.5">
                             <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${statusBg} flex items-center gap-1.5`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${statusDot} animate-pulse`}></span>
-                              {l.status}
+                              {l.status === 'Belum Diproses' ? 'Baru' : l.status === 'Sedang Diproses' ? 'Diproses' : 'Selesai'}
                             </span>
                             <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
                               <Calendar className="w-3.5 h-3.5 text-slate-300" />
@@ -680,6 +687,53 @@ export default function DashboardUser() {
                               </div>
                             </div>
                           )}
+
+                          {/* Tanggapan Admin */}
+                          {l.tanggapan && (
+                            <div className="space-y-1.5 animate-in fade-in duration-300">
+                              <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Tanggapan/Solusi Admin</p>
+                              <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4">
+                                <p className="text-xs text-blue-700 leading-relaxed font-medium">
+                                  {l.tanggapan}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Timeline Riwayat */}
+                          <div className="space-y-2 pt-2 border-t border-slate-100">
+                            <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Riwayat Status Laporan</p>
+                            <div className="relative border-l border-slate-200 ml-2 pl-4 space-y-3 mt-2">
+                              {(l.history || [
+                                { status: 'Belum Diproses', tanggal: l.tanggal }
+                              ]).map((h, idx) => {
+                                const statusColorMap = {
+                                  'Belum Diproses': 'bg-rose-500 ring-rose-100',
+                                  'Sedang Diproses': 'bg-amber-500 ring-amber-100',
+                                  'Selesai': 'bg-emerald-500 ring-emerald-100'
+                                };
+                                const colorClass = statusColorMap[h.status] || 'bg-slate-400 ring-slate-100';
+                                return (
+                                  <div key={idx} className="relative">
+                                    <div className={`absolute -left-[20.5px] top-1 w-1.5 h-1.5 rounded-full ring-4 ${colorClass}`} />
+                                    <div>
+                                      <div className="flex items-center justify-between gap-2">
+                                        <span className="text-xs font-bold text-slate-700">
+                                          {h.status === 'Belum Diproses' ? 'Baru' : h.status === 'Sedang Diproses' ? 'Diproses' : 'Selesai'}
+                                        </span>
+                                        <span className="text-[9px] text-slate-400">{h.tanggal}</span>
+                                      </div>
+                                      {h.catatan && (
+                                        <p className="text-[10px] text-slate-500 italic mt-0.5 leading-relaxed">
+                                          "{h.catatan}"
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
 
                           {/* Ulasan & Rating Section */}
                           {l.status === 'Selesai' && (
